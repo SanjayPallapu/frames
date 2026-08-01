@@ -368,6 +368,192 @@ function EditorialIntro({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHO
   );
 }
 
+/* ─── Kinetic 3D Text Room / Tunnel (Tejj.in Inspired) ──────── */
+
+function KineticTextRoom({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const roomRef = useRef<HTMLDivElement>(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  const topText = ["COME SEE HOW", "MOMENTS LIVE FOREVER", "GENUINE UNPOSED", "COME SEE HOW"];
+  const bottomText = ["COME SEE HOW", "WE CAPTURE STORIES", "TIMELESS ELEGANCE", "COME SEE HOW"];
+  const sideText = ["MEMORIES", "STORY", "CANDID", "FOREVER", "PHOTOGRAPHS"];
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = container.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+      const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+      setMousePos({ x, y });
+    };
+
+    container.addEventListener("mousemove", handleMouseMove);
+    return () => container.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  useEffect(() => {
+    const room = roomRef.current;
+    if (!room) return;
+
+    gsap.to(room, {
+      rotateY: mousePos.x * 15,
+      rotateX: -mousePos.y * 15,
+      duration: 0.8,
+      ease: "power2.out",
+    });
+  }, [mousePos]);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        roomRef.current,
+        { scale: 0.82, rotateX: 12 },
+        {
+          scale: 1,
+          rotateX: 0,
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 0.8,
+          },
+        }
+      );
+    }, containerRef);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section
+      ref={containerRef}
+      className="relative w-full h-[85svh] min-h-[600px] my-16 overflow-hidden bg-[#080808] flex items-center justify-center select-none"
+      style={{ perspective: "1000px" }}
+    >
+      {/* 3D Perspective Room Container */}
+      <div
+        ref={roomRef}
+        className="relative w-full h-full flex items-center justify-center transition-transform duration-300"
+        style={{ transformStyle: "preserve-3d" }}
+      >
+        {/* Top Ceiling Wall */}
+        <div
+          className="absolute top-0 left-0 right-0 h-1/2 overflow-hidden flex flex-col justify-end opacity-90"
+          style={{
+            transform: "rotateX(-80deg) translateZ(10px)",
+            transformOrigin: "top center",
+          }}
+        >
+          <div className="flex flex-col gap-2 animate-marquee-fast whitespace-nowrap">
+            {[...topText, ...topText].map((t, idx) => (
+              <div
+                key={idx}
+                className="text-[clamp(3.5rem,7vw,8rem)] font-black uppercase tracking-tighter leading-none"
+                style={{ color: idx % 2 === 0 ? "#818cf8" : "#a5b4fc" }}
+              >
+                {t} · {t} · {t}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom Floor Wall */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-1/2 overflow-hidden flex flex-col justify-start opacity-90"
+          style={{
+            transform: "rotateX(80deg) translateZ(10px)",
+            transformOrigin: "bottom center",
+          }}
+        >
+          <div className="flex flex-col gap-2 animate-marquee-fast-reverse whitespace-nowrap">
+            {[...bottomText, ...bottomText].map((t, idx) => (
+              <div
+                key={idx}
+                className="text-[clamp(3.5rem,7vw,8rem)] font-black uppercase tracking-tighter leading-none"
+                style={{ color: idx % 2 === 0 ? "#818cf8" : "#93c5fd" }}
+              >
+                {t} · {t} · {t}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Left Wall */}
+        <div
+          className="absolute top-0 bottom-0 left-0 w-1/2 overflow-hidden flex items-center justify-start opacity-90"
+          style={{
+            transform: "rotateY(80deg) translateZ(10px)",
+            transformOrigin: "left center",
+          }}
+        >
+          <div className="flex gap-4 animate-marquee-fast whitespace-nowrap">
+            {[...sideText, ...sideText].map((t, idx) => (
+              <div
+                key={idx}
+                className="text-[clamp(3.5rem,7vw,8rem)] font-black uppercase tracking-tighter leading-none"
+                style={{
+                  color: "#818cf8",
+                  writingMode: "vertical-rl",
+                }}
+              >
+                {t} · {t}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right Wall */}
+        <div
+          className="absolute top-0 bottom-0 right-0 w-1/2 overflow-hidden flex items-center justify-end opacity-90"
+          style={{
+            transform: "rotateY(-80deg) translateZ(10px)",
+            transformOrigin: "right center",
+          }}
+        >
+          <div className="flex gap-4 animate-marquee-fast-reverse whitespace-nowrap">
+            {[...sideText, ...sideText].map((t, idx) => (
+              <div
+                key={idx}
+                className="text-[clamp(3.5rem,7vw,8rem)] font-black uppercase tracking-tighter leading-none"
+                style={{
+                  color: "#a5b4fc",
+                  writingMode: "vertical-rl",
+                }}
+              >
+                {t} · {t}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Center Interactive Portal Box */}
+        <div
+          data-hover
+          onClick={() => onOpenLightbox(PHOTOS[0])}
+          className="relative z-30 w-72 h-44 sm:w-96 sm:h-56 md:w-[480px] md:h-[280px] rounded-2xl overflow-hidden border border-indigo-400/40 shadow-[0_0_90px_rgba(129,140,248,0.4)] cursor-pointer group bg-black"
+          style={{ transform: "translateZ(80px)" }}
+        >
+          <ImageWithFallback
+            src={PHOTOS[0].src}
+            alt="Center portal"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-6">
+            <span className="text-[10px] font-mono uppercase tracking-[0.28em] text-indigo-300 mb-1">
+              Interactive 3D Portal
+            </span>
+            <span className="font-serif italic text-2xl text-white">
+              Explore The Vault →
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ─── Responsive GSAP Horizontal Gallery (Frameless Images) ─── */
 
 function HorizontalGallery({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
@@ -1157,6 +1343,20 @@ export default function App() {
           80% { opacity: 1; }
           100% { transform: translateY(220%); opacity: 0; }
         }
+        @keyframes marqueeFast {
+          0% { transform: translateY(0%); }
+          100% { transform: translateY(-50%); }
+        }
+        @keyframes marqueeFastReverse {
+          0% { transform: translateY(-50%); }
+          100% { transform: translateY(0%); }
+        }
+        .animate-marquee-fast {
+          animation: marqueeFast 14s linear infinite;
+        }
+        .animate-marquee-fast-reverse {
+          animation: marqueeFastReverse 14s linear infinite;
+        }
         * { cursor: default; }
         @media (hover: hover) {
           *[data-hover] { cursor: pointer !important; }
@@ -1177,6 +1377,8 @@ export default function App() {
           <MarqueeStrip speed={55} />
 
           <EditorialIntro onOpenLightbox={setActivePhoto} />
+
+          <KineticTextRoom onOpenLightbox={setActivePhoto} />
 
           <MarqueeStrip reverse speed={40} accent />
 
