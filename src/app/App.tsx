@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
@@ -17,33 +17,22 @@ import img9 from "@/imports/image-9.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export interface PhotoItem {
-  id: number;
-  src: string;
-  alt: string;
-  label: string;
-  year: string;
-  cat: "Portrait" | "Candid" | "Heritage" | "Edit";
-  desc: string;
-}
-
-const PHOTOS: PhotoItem[] = [
-  { id: 0, src: img0, alt: "Together", label: "Us", year: "2024", cat: "Portrait", desc: "A serene, quiet moment shared together in warm natural evening light." },
-  { id: 1, src: img1, alt: "Candid wide", label: "Candid Glance", year: "2024", cat: "Candid", desc: "Spontaneous joy captured in an unscripted, genuine glance." },
-  { id: 2, src: img2, alt: "Traditional attire", label: "Tradition & Grace", year: "2023", cat: "Heritage", desc: "Honoring timeless roots, culture, and traditional heritage attire." },
-  { id: 3, src: img3, alt: "Smiling together", label: "Pure Joy", year: "2023", cat: "Portrait", desc: "Laughter and shared smiles that illuminate every room." },
-  { id: 4, src: img4, alt: "Long Distance", label: "Miles Apart", year: "2023", cat: "Edit", desc: "Distance is just a test of how far love and memories can travel." },
-  { id: 5, src: img5, alt: "Quiet moment", label: "Stillness", year: "2024", cat: "Candid", desc: "Peaceful silence amidst the noise of the bustling outside world." },
-  { id: 6, src: img6, alt: "Her laughter", label: "Her Laughter", year: "2024", cat: "Candid", desc: "The purest, most unfiltered expression of genuine happiness." },
-  { id: 7, src: img7, alt: "Shy moment", label: "Gentle Glance", year: "2024", cat: "Portrait", desc: "Soft, gentle emotions captured in a single quiet second." },
-  { id: 8, src: img8, alt: "Together indoors", label: "Home & Heart", year: "2024", cat: "Portrait", desc: "Building a home and sanctuary wherever we are together." },
-  { id: 9, src: img9, alt: "Selfie moment", label: "Us Again", year: "2024", cat: "Portrait", desc: "Preserving everyday memories side-by-side forever." },
+const PHOTOS = [
+  { src: img0, alt: "Together", label: "Us", year: "2024", cat: "Portrait", desc: "A serene, quiet moment shared together in warm evening light." },
+  { src: img1, alt: "Candid wide", label: "Candid", year: "2024", cat: "Candid", desc: "Spontaneous joy captured in an unscripted glance." },
+  { src: img2, alt: "Traditional attire", label: "Tradition", year: "2023", cat: "Heritage", desc: "Honoring timeless roots and traditional elegance." },
+  { src: img3, alt: "Smiling together", label: "Joy", year: "2023", cat: "Portrait", desc: "Laughter and shared smiles that illuminate every room." },
+  { src: img4, alt: "Long Distance", label: "Miles Apart", year: "2023", cat: "Edit", desc: "Distance is just a test of how far love can travel." },
+  { src: img5, alt: "Quiet moment", label: "Still", year: "2024", cat: "Candid", desc: "Peaceful silence amidst the world's noise." },
+  { src: img6, alt: "Her laughter", label: "Laughter", year: "2024", cat: "Candid", desc: "The purest expression of genuine happiness." },
+  { src: img7, alt: "Shy moment", label: "Shy", year: "2024", cat: "Portrait", desc: "Gentle emotions captured in a glance." },
+  { src: img8, alt: "Together indoors", label: "Home", year: "2024", cat: "Portrait", desc: "Sanctuary created wherever we are together." },
+  { src: img9, alt: "Selfie moment", label: "Us Again", year: "2024", cat: "Portrait", desc: "Preserving everyday memories side-by-side." },
 ];
 
-const CATEGORIES = ["All", "Portrait", "Candid", "Heritage", "Edit"] as const;
-const MARQUEE_ITEMS = ["MEMORIES", "·", "FULL-SIZE", "·", "FOREVER", "·", "CANDID", "·", "HERITAGE", "·", "PORTRAITS", "·"];
+const MARQUEE_ITEMS = ["MEMORIES", "·", "MOMENTS", "·", "FOREVER", "·", "LOVE", "·", "CANDID", "·", "STORIES", "·"];
 
-/* ─── Mobile Hook ───────────────────────────────────────────── */
+/* ─── Helpers ──────────────────────────────────────────────── */
 
 function useIsMobile() {
   const [mobile, setMobile] = useState(false);
@@ -56,7 +45,7 @@ function useIsMobile() {
   return mobile;
 }
 
-/* ─── Dynamic Dual-Ring / Touch Cursor ────────────────────── */
+/* ─── Cursor ───────────────────────────────────────────────── */
 
 function Cursor() {
   const dotRef = useRef<HTMLDivElement>(null);
@@ -75,16 +64,16 @@ function Cursor() {
     window.addEventListener("mousemove", onMove);
 
     const tickFn = () => {
-      cx += (mx - cx) * 0.12;
-      cy += (my - cy) * 0.12;
+      cx += (mx - cx) * 0.1;
+      cy += (my - cy) * 0.1;
       gsap.set(dot, { x: mx - 3, y: my - 3 });
-      gsap.set(circle, { x: cx - 20, y: cy - 20 });
+      gsap.set(circle, { x: cx - 18, y: cy - 18 });
     };
     gsap.ticker.add(tickFn);
 
-    const onEnter = () => gsap.to(circle, { scale: 1.8, opacity: 0.4, duration: 0.35, ease: "expo.out" });
-    const onLeave = () => gsap.to(circle, { scale: 1, opacity: 0.8, duration: 0.35, ease: "expo.out" });
-    const onMouseDown = () => gsap.to([dot, circle], { scale: 0.6, duration: 0.15 });
+    const onEnter = () => gsap.to(circle, { scale: 1.8, opacity: 0.35, duration: 0.35, ease: "expo.out" });
+    const onLeave = () => gsap.to(circle, { scale: 1, opacity: 1, duration: 0.35, ease: "expo.out" });
+    const onMouseDown = () => gsap.to([dot, circle], { scale: 0.7, duration: 0.15 });
     const onMouseUp = () => gsap.to([dot, circle], { scale: 1, duration: 0.15 });
 
     document.querySelectorAll("a,button,[data-hover]").forEach(el => {
@@ -106,7 +95,7 @@ function Cursor() {
   return (
     <>
       <div ref={dotRef} className="fixed top-0 left-0 z-[9999] pointer-events-none w-[6px] h-[6px] rounded-full" style={{ background: "#c9a0a6" }} />
-      <div ref={circleRef} className="fixed top-0 left-0 z-[9998] pointer-events-none w-10 h-10 rounded-full" style={{ border: "1px solid rgba(201,160,166,0.6)", background: "rgba(201,160,166,0.03)", backdropFilter: "blur(2px)" }} />
+      <div ref={circleRef} className="fixed top-0 left-0 z-[9998] pointer-events-none w-9 h-9 rounded-full" style={{ border: "1px solid rgba(201,160,166,0.55)" }} />
     </>
   );
 }
@@ -125,7 +114,7 @@ function Preloader({ onComplete }: { onComplete: () => void }) {
       const tl = gsap.timeline({
         onComplete: () => {
           gsap.to(wrapRef.current, {
-            yPercent: -100, duration: 1.1, ease: "expo.inOut",
+            yPercent: -100, duration: 1, ease: "expo.inOut",
             onComplete,
           });
         },
@@ -143,12 +132,12 @@ function Preloader({ onComplete }: { onComplete: () => void }) {
   }, [onComplete]);
 
   return (
-    <div ref={wrapRef} className="fixed inset-0 z-[9000] flex flex-col items-start justify-end pb-16 px-8 md:px-16" style={{ background: "#080808" }}>
+    <div ref={wrapRef} className="fixed inset-0 z-[9000] flex flex-col items-start justify-end pb-16 px-10 md:px-16" style={{ background: "#080808" }}>
       <div className="absolute inset-0 flex items-center justify-center">
         <span ref={numRef} className="select-none tabular-nums" style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(5rem,18vw,16rem)", color: "rgba(240,236,230,0.06)", fontWeight: 900, lineHeight: 1 }}>0</span>
       </div>
       <div className="relative z-10 mb-8">
-        <div style={{ overflow: "hidden" }}><div ref={line1Ref} style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.8rem,4vw,3.2rem)", color: "#f0ece6", fontWeight: 400, fontStyle: "italic", lineHeight: 1.1 }}>Loading full size</div></div>
+        <div style={{ overflow: "hidden" }}><div ref={line1Ref} style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.8rem,4vw,3.2rem)", color: "#f0ece6", fontWeight: 400, fontStyle: "italic", lineHeight: 1.1 }}>Loading your</div></div>
         <div style={{ overflow: "hidden" }}><div ref={line2Ref} style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.8rem,4vw,3.2rem)", color: "#c9a0a6", fontWeight: 400, lineHeight: 1.1 }}>story…</div></div>
       </div>
       <div className="w-full max-w-xs h-px overflow-hidden" style={{ background: "rgba(240,236,230,0.08)" }}>
@@ -160,12 +149,12 @@ function Preloader({ onComplete }: { onComplete: () => void }) {
 
 /* ─── Nav ──────────────────────────────────────────────────── */
 
-function Nav({ onSelectCategory, activeCategory }: { onSelectCategory: (cat: string) => void; activeCategory: string }) {
+function Nav() {
   const navRef = useRef<HTMLElement>(null);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
+    const onScroll = () => setScrolled(window.scrollY > 80);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -173,44 +162,21 @@ function Nav({ onSelectCategory, activeCategory }: { onSelectCategory: (cat: str
   return (
     <nav
       ref={navRef}
-      className="fixed top-0 left-0 right-0 z-[500] flex items-center justify-between px-6 md:px-12 transition-all duration-700"
+      className="fixed top-0 left-0 right-0 z-[500] flex items-center justify-between px-8 md:px-12 transition-all duration-700"
       style={{
         height: scrolled ? "64px" : "80px",
-        background: scrolled ? "rgba(8,8,8,0.92)" : "linear-gradient(to bottom, rgba(8,8,8,0.7) 0%, transparent 100%)",
+        background: scrolled ? "rgba(8,8,8,0.88)" : "transparent",
         backdropFilter: scrolled ? "blur(20px)" : "none",
-        borderBottom: scrolled ? "1px solid rgba(240,236,230,0.08)" : "1px solid transparent",
+        borderBottom: scrolled ? "1px solid rgba(240,236,230,0.06)" : "1px solid transparent",
       }}
     >
-      <div className="flex items-center gap-3" data-hover>
-        <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.25rem", color: "#f0ece6", fontStyle: "italic", letterSpacing: "0.1em" }}>
-          Frames
-        </span>
-        <span className="text-[9px] px-2 py-0.5 rounded tracking-[0.2em] uppercase" style={{ fontFamily: "'DM Mono', monospace", background: "rgba(201,160,166,0.15)", color: "#c9a0a6", border: "1px solid rgba(201,160,166,0.3)" }}>
-          Full-Size
-        </span>
-      </div>
-
-      <div className="flex items-center gap-3 md:gap-8">
-        <span className="text-[10px] tracking-[0.2em] uppercase hidden sm:inline-block" style={{ fontFamily: "'DM Mono', monospace", color: "rgba(240,236,230,0.35)" }}>Filter:</span>
-        <div className="flex items-center gap-1.5 md:gap-2">
-          {CATEGORIES.map(cat => (
-            <button
-              key={cat}
-              data-hover
-              onClick={() => onSelectCategory(cat)}
-              className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] px-2.5 py-1 rounded transition-all duration-300"
-              style={{
-                fontFamily: "'DM Mono', monospace",
-                color: activeCategory === cat ? "#080808" : "rgba(240,236,230,0.65)",
-                background: activeCategory === cat ? "#c9a0a6" : "rgba(240,236,230,0.05)",
-                border: activeCategory === cat ? "1px solid #c9a0a6" : "1px solid rgba(240,236,230,0.08)",
-                cursor: "pointer",
-              }}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
+      <span data-hover style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.15rem", color: "#f0ece6", fontStyle: "italic", letterSpacing: "0.12em" }}>
+        Frames
+      </span>
+      <div className="flex items-center gap-6 md:gap-10">
+        {["Gallery", "Story", "Contact"].map(n => (
+          <button key={n} data-hover className="text-[11px] uppercase tracking-[0.22em] transition-opacity hover:opacity-50" style={{ fontFamily: "'DM Mono', monospace", color: "rgba(240,236,230,0.7)", background: "none", border: "none", cursor: "pointer" }}>{n}</button>
+        ))}
       </div>
     </nav>
   );
@@ -218,14 +184,14 @@ function Nav({ onSelectCategory, activeCategory }: { onSelectCategory: (cat: str
 
 /* ─── Hero ─────────────────────────────────────────────────── */
 
-function Hero({ onOpenLightbox }: { onOpenLightbox: (photo: PhotoItem) => void }) {
+function Hero({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
   const sectionRef = useRef<HTMLElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
   const tagRef = useRef<HTMLParagraphElement>(null);
   const h1aRef = useRef<HTMLDivElement>(null);
   const h1bRef = useRef<HTMLDivElement>(null);
   const subRef = useRef<HTMLParagraphElement>(null);
-  const btnRef = useRef<HTMLButtonElement>(null);
+  const scrollIndRef = useRef<HTMLDivElement>(null);
   const wordRef = useRef<HTMLSpanElement>(null);
   const [wordIdx, setWordIdx] = useState(0);
   const words = ["story.", "journey.", "moments.", "forever."];
@@ -233,14 +199,14 @@ function Hero({ onOpenLightbox }: { onOpenLightbox: (photo: PhotoItem) => void }
   useEffect(() => {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ delay: 0.15 });
-      tl.from(bgRef.current, { scale: 1.15, opacity: 0, duration: 2.4, ease: "expo.out" })
-        .from(tagRef.current, { opacity: 0, y: 18, duration: 0.8 }, "-=1.6")
-        .from([h1aRef.current, h1bRef.current], { yPercent: 110, stagger: 0.12, duration: 1.1, ease: "expo.out" }, "-=1.1")
+      tl.from(bgRef.current, { scale: 1.12, duration: 2.2, ease: "expo.out" })
+        .from(tagRef.current, { opacity: 0, y: 16, duration: 0.8 }, "-=1.4")
+        .from([h1aRef.current, h1bRef.current], { yPercent: 110, stagger: 0.12, duration: 1.1, ease: "expo.out" }, "-=1.0")
         .from(subRef.current, { opacity: 0, y: 14, duration: 0.8 }, "-=0.6")
-        .from(btnRef.current, { opacity: 0, y: 12, duration: 0.6 }, "-=0.4");
+        .from(scrollIndRef.current, { opacity: 0, duration: 0.6 }, "-=0.3");
 
       gsap.to(bgRef.current, {
-        yPercent: 20,
+        yPercent: 22,
         ease: "none",
         scrollTrigger: { trigger: sectionRef.current, start: "top top", end: "bottom top", scrub: true },
       });
@@ -252,41 +218,35 @@ function Hero({ onOpenLightbox }: { onOpenLightbox: (photo: PhotoItem) => void }
     const id = setInterval(() => {
       const el = wordRef.current;
       if (!el) return;
-      gsap.to(el, {
-        yPercent: -120, opacity: 0, duration: 0.4, ease: "expo.in", onComplete: () => {
-          setWordIdx(i => (i + 1) % words.length);
-          gsap.fromTo(el, { yPercent: 120, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.55, ease: "expo.out" });
-        }
-      });
-    }, 2800);
+      gsap.to(el, { yPercent: -115, opacity: 0, duration: 0.42, ease: "expo.in", onComplete: () => {
+        setWordIdx(i => (i + 1) % words.length);
+        gsap.fromTo(el, { yPercent: 115, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.55, ease: "expo.out" });
+      }});
+    }, 2600);
     return () => clearInterval(id);
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative flex flex-col justify-end min-h-[100svh] pt-28 pb-16 px-6 md:px-12 overflow-hidden bg-background">
-      {/* Background with Ambient Container so hero image is full-size complete */}
-      <div ref={bgRef} className="absolute inset-0 overflow-hidden flex items-center justify-center bg-black/60 pointer-events-none" style={{ willChange: "transform" }}>
-        <ImageWithFallback
-          src={img0}
-          alt="Hero"
-          className="w-full h-full object-cover md:object-contain object-center scale-[1.03] filter brightness-[0.78]"
-        />
-        <div className="absolute inset-0" style={{ background: "radial-gradient(circle at center, transparent 30%, rgba(8,8,8,0.85) 85%), linear-gradient(to bottom, rgba(8,8,8,0.4) 0%, transparent 40%, rgba(8,8,8,0.95) 90%)" }} />
+    <section ref={sectionRef} className="relative flex flex-col justify-end" style={{ height: "100svh", minHeight: "600px" }}>
+      {/* Full-size complete aspect container */}
+      <div ref={bgRef} className="absolute inset-0 overflow-hidden flex items-center justify-center bg-black/60" style={{ willChange: "transform" }}>
+        <ImageWithFallback src={img0} alt="Hero" className="w-full h-full object-cover md:object-contain object-top" style={{ marginTop: "-2%" }} />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(8,8,8,0.25) 0%, rgba(8,8,8,0.05) 30%, rgba(8,8,8,0.6) 70%, rgba(8,8,8,0.97) 100%)" }} />
       </div>
 
-      <div className="relative z-10 max-w-6xl">
-        <p ref={tagRef} className="text-[11px] uppercase tracking-[0.32em] mb-4 md:mb-6" style={{ fontFamily: "'DM Mono', monospace", color: "#c9a0a6" }}>
-          Personal Collection · 10 Full-Size Photographs
+      <div className="relative z-10 px-8 md:px-12 pb-16 md:pb-20 max-w-6xl">
+        <p ref={tagRef} className="text-[11px] uppercase tracking-[0.32em] mb-6 md:mb-8" style={{ fontFamily: "'DM Mono', monospace", color: "#c9a0a6" }}>
+          A Personal Collection · 2023–2024
         </p>
         <div className="mb-4">
           <div style={{ overflow: "hidden" }}>
-            <div ref={h1aRef} className="leading-[0.92]" style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(3.8rem,11vw,9.5rem)", color: "#f0ece6", fontWeight: 400, letterSpacing: "-0.025em" }}>
+            <div ref={h1aRef} className="leading-[0.92]" style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(4rem,11vw,9.5rem)", color: "#f0ece6", fontWeight: 400, letterSpacing: "-0.025em" }}>
               Our
             </div>
           </div>
           <div style={{ overflow: "hidden" }}>
-            <div ref={h1bRef} className="leading-[0.92] flex items-baseline gap-3 md:gap-5 flex-wrap">
-              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(3.8rem,11vw,9.5rem)", color: "#f0ece6", fontWeight: 400, fontStyle: "italic", letterSpacing: "-0.025em" }}>
+            <div ref={h1bRef} className="leading-[0.92] flex items-baseline gap-4 flex-wrap">
+              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(4rem,11vw,9.5rem)", color: "#f0ece6", fontWeight: 400, fontStyle: "italic", letterSpacing: "-0.025em" }}>
                 beautiful
               </span>
               <span style={{ overflow: "hidden", display: "inline-block", verticalAlign: "bottom" }}>
@@ -297,26 +257,15 @@ function Hero({ onOpenLightbox }: { onOpenLightbox: (photo: PhotoItem) => void }
             </div>
           </div>
         </div>
-        <p ref={subRef} className="text-sm md:text-base max-w-xs md:max-w-md mt-6" style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(240,236,230,0.55)", fontWeight: 300, lineHeight: 1.8 }}>
-          Genuine moments, candid glances, and the quiet beauty of life presented in complete full-size clarity.
+        <p ref={subRef} className="text-sm max-w-xs md:max-w-sm mt-6 cursor-pointer" onClick={() => onOpenLightbox(PHOTOS[0])} style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(240,236,230,0.55)", fontWeight: 300, lineHeight: 1.85, letterSpacing: "0.01em" }}>
+          Genuine moments, candid glances, and the quiet beauty of two lives woven together.
         </p>
+      </div>
 
-        <div className="mt-8 flex items-center gap-4">
-          <button
-            ref={btnRef}
-            data-hover
-            onClick={() => onOpenLightbox(PHOTOS[0])}
-            className="px-6 py-3 rounded-full text-[11px] uppercase tracking-[0.2em] font-medium transition-all duration-300 flex items-center gap-3"
-            style={{
-              fontFamily: "'DM Mono', monospace",
-              background: "#c9a0a6",
-              color: "#080808",
-              cursor: "pointer",
-            }}
-          >
-            <span>Inspect Hero Photo</span>
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 11L11 1M11 1H3M11 1V9" stroke="#080808" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-          </button>
+      <div ref={scrollIndRef} className="absolute bottom-10 right-10 z-10 hidden md:flex flex-col items-center gap-3">
+        <span className="text-[10px] tracking-[0.2em] uppercase" style={{ fontFamily: "'DM Mono', monospace", color: "rgba(240,236,230,0.28)", writingMode: "vertical-rl" }}>scroll</span>
+        <div className="w-px h-14 overflow-hidden" style={{ background: "rgba(240,236,230,0.1)" }}>
+          <div className="w-full" style={{ height: "50%", background: "#c9a0a6", animation: "scrollLine 1.6s ease-in-out infinite" }} />
         </div>
       </div>
     </section>
@@ -325,7 +274,7 @@ function Hero({ onOpenLightbox }: { onOpenLightbox: (photo: PhotoItem) => void }
 
 /* ─── Marquee ──────────────────────────────────────────────── */
 
-function MarqueeStrip({ reverse = false, accent = false, speed = 45 }: { reverse?: boolean; accent?: boolean; speed?: number }) {
+function MarqueeStrip({ reverse = false, accent = false, speed = 50 }: { reverse?: boolean; accent?: boolean; speed?: number }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const items = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
 
@@ -338,21 +287,22 @@ function MarqueeStrip({ reverse = false, accent = false, speed = 45 }: { reverse
   }, [reverse, speed]);
 
   return (
-    <div className="overflow-hidden py-4 md:py-5" style={{ borderTop: "1px solid rgba(240,236,230,0.06)", borderBottom: "1px solid rgba(240,236,230,0.06)", background: "rgba(8,8,8,0.6)" }}>
+    <div className="overflow-hidden py-4 md:py-5" style={{ borderTop: "1px solid rgba(240,236,230,0.06)", borderBottom: "1px solid rgba(240,236,230,0.06)" }}>
       <div ref={trackRef} className="flex gap-7 whitespace-nowrap" style={{ willChange: "transform" }}>
         {items.map((w, i) => (
-          <span key={i} className="text-[10px] md:text-[11px] tracking-[0.3em] uppercase select-none" style={{ fontFamily: "'DM Mono', monospace", color: w === "·" ? "rgba(240,236,230,0.15)" : accent ? "rgba(201,160,166,0.7)" : "rgba(240,236,230,0.35)" }}>{w}</span>
+          <span key={i} className="text-[10px] tracking-[0.3em] uppercase select-none" style={{ fontFamily: "'DM Mono', monospace", color: w === "·" ? "rgba(240,236,230,0.15)" : accent ? "rgba(201,160,166,0.6)" : "rgba(240,236,230,0.3)" }}>{w}</span>
         ))}
       </div>
     </div>
   );
 }
 
-/* ─── Editorial Intro (Full-Size Image View) ───────────────── */
+/* ─── Editorial Intro ──────────────────────────────────────── */
 
-function EditorialIntro({ onOpenLightbox }: { onOpenLightbox: (photo: PhotoItem) => void }) {
+function EditorialIntro({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
   const sectionRef = useRef<HTMLElement>(null);
   const imgWrapRef = useRef<HTMLDivElement>(null);
+  const imgInnerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const lineRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -362,80 +312,73 @@ function EditorialIntro({ onOpenLightbox }: { onOpenLightbox: (photo: PhotoItem)
         clipPath: "inset(100% 0% 0% 0%)",
         duration: 1.4,
         ease: "expo.inOut",
-        scrollTrigger: { trigger: sectionRef.current, start: "top 75%" },
+        scrollTrigger: { trigger: sectionRef.current, start: "top 70%" },
+      });
+      gsap.to(imgInnerRef.current, {
+        yPercent: -18,
+        ease: "none",
+        scrollTrigger: { trigger: sectionRef.current, start: "top bottom", end: "bottom top", scrub: true },
       });
       lineRefs.current.forEach((el, i) => {
         if (!el) return;
         gsap.from(el, {
           yPercent: 105, opacity: 0, duration: 1, delay: i * 0.1, ease: "expo.out",
-          scrollTrigger: { trigger: textRef.current, start: "top 80%" },
+          scrollTrigger: { trigger: textRef.current, start: "top 78%" },
         });
       });
     }, sectionRef);
     return () => ctx.revert();
   }, []);
 
-  const lines = ["Every photograph", "is a complete, unclipped", "moment of truth."];
+  const lines = ["Every photograph", "is a secret about a", "secret."];
 
   return (
-    <section ref={sectionRef} className="px-6 md:px-12 py-20 md:py-32 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center max-w-[1600px] mx-auto">
+    <section ref={sectionRef} className="px-8 md:px-12 py-24 md:py-36 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center max-w-[1600px] mx-auto">
       <div ref={textRef} className="order-2 md:order-1">
-        <p className="text-[11px] uppercase tracking-[0.28em] mb-6" style={{ fontFamily: "'DM Mono', monospace", color: "#c9a0a6" }}>About this Collection</p>
+        <p className="text-[11px] uppercase tracking-[0.28em] mb-8 md:mb-12" style={{ fontFamily: "'DM Mono', monospace", color: "#c9a0a6" }}>About this Collection</p>
         <div className="mb-8">
           {lines.map((line, i) => (
             <div key={i} style={{ overflow: "hidden" }}>
-              <div ref={el => { lineRefs.current[i] = el; }} style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem,4.2vw,3.8rem)", color: "#f0ece6", fontWeight: 400, lineHeight: 1.15, letterSpacing: "-0.018em", fontStyle: i === 1 ? "italic" : "normal" }}>
+              <div ref={el => { lineRefs.current[i] = el; }} style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2.2rem,4.5vw,4rem)", color: "#f0ece6", fontWeight: 400, lineHeight: 1.12, letterSpacing: "-0.018em", fontStyle: i === 1 ? "italic" : "normal" }}>
                 {line}
               </div>
             </div>
           ))}
         </div>
-        <p className="text-sm leading-relaxed max-w-sm mb-8" style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(240,236,230,0.48)", fontWeight: 300 }}>
-          Every single photograph in this collection is preserved in its complete full-size resolution and natural aspect ratio — without harsh cropping or cutoffs.
+        <p className="text-sm leading-relaxed max-w-sm" style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(240,236,230,0.5)", fontWeight: 300 }}>
+          This collection captures 10 genuine photographs — unposed, unrehearsed, and deeply personal. From traditional celebrations to quiet everyday moments.
         </p>
-        <button
-          data-hover
-          onClick={() => onOpenLightbox(PHOTOS[2])}
-          className="inline-flex items-center gap-3 text-[11px] tracking-[0.22em] uppercase transition-all duration-300 hover:text-[#c9a0a6]"
-          style={{ fontFamily: "'DM Mono', monospace", color: "#f0ece6", background: "none", border: "none", cursor: "pointer" }}
-        >
-          <span>View Heritage Photo (Full Size)</span>
-          <span className="w-6 h-6 rounded-full flex items-center justify-center border border-[#c9a0a6]/40">→</span>
-        </button>
+        <div className="mt-10 flex items-center gap-4">
+          <div className="h-px w-12" style={{ background: "#c9a0a6" }} />
+          <span className="text-[11px] tracking-[0.2em] uppercase" style={{ fontFamily: "'DM Mono', monospace", color: "rgba(240,236,230,0.4)" }}>10 Photographs · 2023–2024</span>
+        </div>
       </div>
 
       <div
         ref={imgWrapRef}
         data-hover
         onClick={() => onOpenLightbox(PHOTOS[2])}
-        className="order-1 md:order-2 relative overflow-hidden rounded-lg cursor-pointer group p-3"
-        style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(240,236,230,0.08)" }}
+        className="order-1 md:order-2 relative overflow-hidden aspect-[3/4] rounded-lg cursor-pointer bg-black/40 p-2"
+        style={{ clipPath: "inset(0% 0% 0% 0%)", border: "1px solid rgba(240,236,230,0.08)" }}
       >
-        <div className="w-full flex items-center justify-center overflow-hidden rounded bg-black/40" style={{ minHeight: "360px", maxHeight: "600px" }}>
-          <ImageWithFallback
-            src={img2}
-            alt="Heritage moment"
-            className="max-w-full max-h-[580px] w-auto h-auto object-contain transition-transform duration-700 group-hover:scale-[1.03]"
-          />
+        <div ref={imgInnerRef} className="absolute inset-0 flex items-center justify-center scale-[1.1]" style={{ willChange: "transform" }}>
+          <ImageWithFallback src={img2} alt="Traditional moment" className="w-full h-full object-cover md:object-contain" />
         </div>
-        <div className="mt-3 flex items-center justify-between px-1">
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(to bottom right, transparent 60%, rgba(8,8,8,0.5) 100%)" }} />
+        <div className="absolute bottom-6 left-6">
           <span className="text-[11px] tracking-[0.18em] uppercase" style={{ fontFamily: "'DM Mono', monospace", color: "#c9a0a6" }}>Heritage · 2023</span>
-          <span className="text-[10px] tracking-[0.2em] uppercase" style={{ fontFamily: "'DM Mono', monospace", color: "rgba(240,236,230,0.4)" }}>Click for Lightbox ↗</span>
         </div>
       </div>
     </section>
   );
 }
 
-/* ─── Responsive Horizontal Gallery (Works on ALL Devices) ─── */
+/* ─── Responsive GSAP Horizontal Gallery (ALL DEVICES) ───────── */
 
-function HorizontalGallery({ activeCategory, onOpenLightbox }: { activeCategory: string; onOpenLightbox: (photo: PhotoItem) => void }) {
+function HorizontalGallery({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
   const outerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
-  const progressRef = useRef<HTMLDivElement>(null);
-
-  const filteredPhotos = activeCategory === "All" ? PHOTOS : PHOTOS.filter(p => p.cat === activeCategory);
 
   useEffect(() => {
     const outer = outerRef.current;
@@ -449,13 +392,11 @@ function HorizontalGallery({ activeCategory, onOpenLightbox }: { activeCategory:
       isMobile: "(max-width: 767px)",
     }, (context) => {
       const { isMobile } = context.conditions as { isMobile: boolean };
-      const totalWidth = track.scrollWidth;
-      const viewWidth = window.innerWidth;
-      const scrollDistance = Math.max(0, totalWidth - viewWidth + (isMobile ? 40 : 120));
+      const scrollDistance = track.scrollWidth - window.innerWidth + (isMobile ? 40 : 160);
 
       gsap.from(titleRef.current, {
         opacity: 0, y: 30, duration: 0.8,
-        scrollTrigger: { trigger: outer, start: "top 85%" },
+        scrollTrigger: { trigger: outer, start: "top 80%" },
       });
 
       const tl = gsap.timeline({
@@ -466,11 +407,6 @@ function HorizontalGallery({ activeCategory, onOpenLightbox }: { activeCategory:
           end: () => "+=" + scrollDistance,
           scrub: 0.8,
           invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            if (progressRef.current) {
-              gsap.set(progressRef.current, { scaleX: self.progress });
-            }
-          },
         },
       });
 
@@ -478,51 +414,37 @@ function HorizontalGallery({ activeCategory, onOpenLightbox }: { activeCategory:
     });
 
     return () => mm.revert();
-  }, [filteredPhotos.length]);
+  }, []);
 
   return (
-    <div ref={outerRef} className="relative overflow-hidden bg-background py-16">
-      {/* Title Bar */}
-      <div ref={titleRef} className="px-6 md:px-12 mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div ref={outerRef} className="relative overflow-hidden bg-background">
+      <div ref={titleRef} className="absolute top-0 left-0 px-8 md:px-12 pt-16 z-10 flex items-end justify-between w-full pr-12">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.28em] mb-2" style={{ fontFamily: "'DM Mono', monospace", color: "#c9a0a6" }}>
-            Complete Full-Size Archive ({filteredPhotos.length})
-          </p>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem,4vw,3.4rem)", color: "#f0ece6", fontWeight: 400 }}>
-            The <em>Complete</em> Gallery
-          </h2>
+          <p className="text-[11px] uppercase tracking-[0.28em] mb-2" style={{ fontFamily: "'DM Mono', monospace", color: "#c9a0a6" }}>All Photographs</p>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.8rem,3.5vw,3rem)", color: "#f0ece6", fontWeight: 400 }}>The <em>Complete</em> Set</h2>
         </div>
-        <div className="flex items-center gap-4">
-          <span className="text-[11px] tracking-[0.2em] uppercase" style={{ fontFamily: "'DM Mono', monospace", color: "rgba(240,236,230,0.3)" }}>
-            ← Scroll or Drag →
-          </span>
-        </div>
+        <span className="text-[11px] tracking-[0.2em] uppercase" style={{ fontFamily: "'DM Mono', monospace", color: "rgba(240,236,230,0.35)" }}>← drag · scroll →</span>
       </div>
 
-      {/* Track */}
       <div
         ref={trackRef}
-        className="flex items-center gap-6 md:gap-8 px-6 md:px-12 py-4 whitespace-nowrap"
+        className="flex items-center gap-4 md:gap-6 pt-36 pb-12 px-8 md:px-12 whitespace-nowrap"
         style={{ width: "max-content", willChange: "transform" }}
       >
-        {filteredPhotos.map((p, i) => (
-          <FullSizeCard key={p.id} photo={p} index={i} onOpenLightbox={onOpenLightbox} />
+        {PHOTOS.map((p, i) => (
+          <HGalleryCard key={i} photo={p} index={i} onOpenLightbox={onOpenLightbox} />
         ))}
-      </div>
-
-      {/* Progress Bar */}
-      <div className="mx-6 md:mx-12 mt-10 h-[2px] bg-white/10 rounded overflow-hidden">
-        <div ref={progressRef} className="h-full bg-[#c9a0a6] origin-left scale-x-0 transition-transform duration-100" />
+        <div className="flex-shrink-0 w-16 md:w-20" />
       </div>
     </div>
   );
 }
 
-/* ─── Full-Size Gallery Card Component ────────────────────────── */
-
-function FullSizeCard({ photo, index, onOpenLightbox }: { photo: PhotoItem; index: number; onOpenLightbox: (photo: PhotoItem) => void }) {
+function HGalleryCard({ photo, index, onOpenLightbox }: { photo: typeof PHOTOS[0]; index: number; onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
+  const heights = [520, 440, 580, 460, 500, 420, 560, 440, 520, 480];
+  const widths = [320, 260, 340, 280, 300, 260, 320, 280, 310, 290];
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = cardRef.current;
@@ -531,8 +453,8 @@ function FullSizeCard({ photo, index, onOpenLightbox }: { photo: PhotoItem; inde
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
     gsap.to(card, {
-      rotateY: (x / rect.width) * 12,
-      rotateX: (-y / rect.height) * 12,
+      rotateY: (x / rect.width) * 10,
+      rotateX: (-y / rect.height) * 10,
       scale: 1.03,
       duration: 0.4,
       ease: "power2.out",
@@ -554,133 +476,203 @@ function FullSizeCard({ photo, index, onOpenLightbox }: { photo: PhotoItem; inde
       onMouseEnter={() => setHovered(true)}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative flex-shrink-0 flex flex-col justify-between overflow-hidden rounded-xl cursor-pointer group p-3 transition-shadow duration-500"
+      className="relative flex-shrink-0 overflow-hidden rounded-lg bg-stone-900/60 p-2 cursor-pointer transition-shadow duration-500"
       style={{
-        width: "clamp(270px, 75vw, 360px)",
-        minHeight: "440px",
-        background: "rgba(18,18,18,0.75)",
+        width: `${widths[index]}px`,
+        height: `${heights[index]}px`,
+        maxWidth: "85vw",
         border: hovered ? "1px solid rgba(201,160,166,0.6)" : "1px solid rgba(240,236,230,0.08)",
-        backdropFilter: "blur(12px)",
         transformStyle: "preserve-3d",
         perspective: 1000,
       }}
     >
-      {/* Card Header */}
-      <div className="flex items-center justify-between mb-3 px-1">
-        <span className="text-[10px] px-2.5 py-1 rounded tracking-[0.18em] uppercase font-mono" style={{ background: "rgba(201,160,166,0.12)", color: "#c9a0a6", border: "1px solid rgba(201,160,166,0.25)" }}>
+      <ImageWithFallback
+        src={photo.src}
+        alt={photo.alt}
+        className="w-full h-full object-cover md:object-contain rounded transition-transform duration-700"
+        style={{ transform: hovered ? "scale(1.06)" : "scale(1.0)", willChange: "transform" }}
+        draggable={false}
+      />
+      <div className="absolute inset-0 transition-opacity duration-500 pointer-events-none" style={{ background: "linear-gradient(to top, rgba(8,8,8,0.88) 0%, transparent 55%)", opacity: hovered ? 1 : 0.45 }} />
+      <div className="absolute top-4 left-4 transition-all duration-400" style={{ opacity: hovered ? 1 : 0, transform: hovered ? "translateY(0)" : "translateY(-8px)" }}>
+        <span className="text-[10px] px-2.5 py-1.5 tracking-[0.15em] uppercase font-mono" style={{ color: "#c9a0a6", background: "rgba(8,8,8,0.75)", backdropFilter: "blur(10px)" }}>
           {photo.cat}
         </span>
-        <span className="text-[10px] tracking-[0.2em] font-mono text-white/40">
-          0{index + 1} / 10
-        </span>
       </div>
-
-      {/* Image Container with Ambient Background to ensure FULL SIZE display without harsh cropping */}
-      <div className="relative flex-1 w-full flex items-center justify-center overflow-hidden rounded-lg bg-black/60 py-2">
-        <ImageWithFallback
-          src={photo.src}
-          alt={photo.alt}
-          className="max-w-full max-h-[340px] w-auto h-auto object-contain transition-transform duration-700 group-hover:scale-[1.04]"
-          draggable={false}
-        />
-        {/* Subtle Ambient Radial Glow */}
-        <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: "radial-gradient(circle at center, rgba(201,160,166,0.15) 0%, transparent 70%)" }} />
+      <div className="absolute bottom-0 left-0 right-0 p-5 transition-all duration-500" style={{ transform: hovered ? "translateY(0)" : "translateY(10px)", opacity: hovered ? 1 : 0.7 }}>
+        <span className="block text-[11px] mb-1.5 font-mono" style={{ color: "rgba(240,236,230,0.5)", letterSpacing: "0.12em" }}>{photo.year}</span>
+        <span className="block text-xl font-serif italic" style={{ color: "#f0ece6", fontWeight: 400 }}>{photo.label}</span>
       </div>
-
-      {/* Card Footer */}
-      <div className="mt-3 px-1 flex items-end justify-between">
-        <div>
-          <span className="block text-[10px] tracking-[0.15em] font-mono text-white/40 mb-0.5">{photo.year}</span>
-          <span className="block text-lg font-serif italic text-[#f0ece6]">{photo.label}</span>
-        </div>
-        <div className="w-8 h-8 rounded-full flex items-center justify-center bg-white/5 border border-white/10 group-hover:bg-[#c9a0a6] group-hover:text-black transition-all duration-300">
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 9L9 1M9 1H3M9 1V7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-        </div>
+      <div className="absolute top-4 right-4 transition-all duration-400" style={{ opacity: hovered ? 1 : 0 }}>
+        <span className="text-[11px] tracking-widest font-mono" style={{ color: "rgba(240,236,230,0.5)" }}>0{index + 1}</span>
       </div>
     </div>
   );
 }
 
-/* ─── Bento Grid (Full-Size Compositions) ───────────────────── */
+/* ─── Feature Photos ───────────────────────────────────────── */
 
-function BentoGrid({ onOpenLightbox }: { onOpenLightbox: (photo: PhotoItem) => void }) {
+function FeaturePhoto({ photo, quote, label, year, reverse = false, onOpenLightbox }: {
+  photo: string;
+  quote: string;
+  label: string;
+  year: string;
+  reverse?: boolean;
+  onOpenLightbox: (photo: typeof PHOTOS[0]) => void;
+}) {
   const sectionRef = useRef<HTMLElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
+  const imgWrapRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
+  const lineRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  const sentences = quote.split("|");
+  const matchedPhoto = PHOTOS.find(p => p.src === photo) || PHOTOS[0];
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(titleRef.current, {
-        opacity: 0, y: 30, duration: 0.8,
-        scrollTrigger: { trigger: sectionRef.current, start: "top 80%" },
+      gsap.from(imgWrapRef.current, {
+        clipPath: "inset(0% 100% 0% 0%)",
+        duration: 1.6,
+        ease: "expo.inOut",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 72%" },
+      });
+      gsap.to(imgRef.current, {
+        yPercent: -16,
+        ease: "none",
+        scrollTrigger: { trigger: sectionRef.current, start: "top bottom", end: "bottom top", scrub: true },
+      });
+      lineRefs.current.forEach((el, i) => {
+        if (!el) return;
+        gsap.from(el, {
+          yPercent: 110, opacity: 0, duration: 1.1, delay: i * 0.12, ease: "expo.out",
+          scrollTrigger: { trigger: textRef.current, start: "top 80%" },
+        });
+      });
+    }, sectionRef);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="px-8 md:px-12 py-20 md:py-32 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-24 items-center max-w-[1600px] mx-auto">
+      <div
+        ref={imgWrapRef}
+        data-hover
+        onClick={() => onOpenLightbox(matchedPhoto)}
+        className={`relative overflow-hidden aspect-[3/4] rounded-lg cursor-pointer bg-black/40 p-2 ${reverse ? "md:order-2" : "md:order-1"}`}
+        style={{ clipPath: "inset(0% 0% 0% 0%)", border: "1px solid rgba(240,236,230,0.08)" }}
+      >
+        <div ref={imgRef} className="absolute inset-0 flex items-center justify-center scale-[1.22]" style={{ willChange: "transform" }}>
+          <ImageWithFallback src={photo} alt={label} className="w-full h-full object-cover md:object-contain" />
+        </div>
+      </div>
+      <div ref={textRef} className={`${reverse ? "md:order-1" : "md:order-2"}`}>
+        <p className="text-[11px] uppercase tracking-[0.28em] mb-8 font-mono" style={{ color: "#c9a0a6" }}>{label} · {year}</p>
+        <div className="mb-8">
+          {sentences.map((s, i) => (
+            <div key={i} style={{ overflow: "hidden" }}>
+              <div ref={el => { lineRefs.current[i] = el; }} style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.8rem,3.8vw,3.4rem)", color: "#f0ece6", fontWeight: 400, lineHeight: 1.15, letterSpacing: "-0.015em", fontStyle: i % 2 === 1 ? "italic" : "normal" }}>
+                {s}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="h-px max-w-[200px]" style={{ background: "rgba(240,236,230,0.1)" }} />
+      </div>
+    </section>
+  );
+}
+
+/* ─── Bento Grid ───────────────────────────────────────────── */
+
+function BentoGrid({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const lineRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      lineRefs.current.forEach((el, i) => {
+        if (!el) return;
+        gsap.from(el, {
+          yPercent: 110, opacity: 0, duration: 1, delay: i * 0.1, ease: "expo.out",
+          scrollTrigger: { trigger: titleRef.current, start: "top 82%" },
+        });
       });
       gsap.from(".bento-cell", {
-        opacity: 0, y: 40, stagger: 0.1, duration: 0.9, ease: "expo.out",
-        scrollTrigger: { trigger: sectionRef.current, start: "top 70%" },
+        opacity: 0, scale: 0.96, y: 40, stagger: { amount: 0.6, from: "random" }, duration: 1, ease: "expo.out",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 65%" },
       });
     }, sectionRef);
     return () => ctx.revert();
   }, []);
 
   const bentoItems = [
-    PHOTOS[1], PHOTOS[3], PHOTOS[5], PHOTOS[7], PHOTOS[4],
+    { src: img1, alt: "Candid", label: "Candid", span: "col-span-1 md:col-span-1 row-span-2", photo: PHOTOS[1] },
+    { src: img3, alt: "Joy", label: "Joy", span: "col-span-1 row-span-1", photo: PHOTOS[3] },
+    { src: img5, alt: "Still", label: "Still", span: "col-span-1 row-span-1", photo: PHOTOS[5] },
+    { src: img7, alt: "Shy", label: "Shy", span: "col-span-1 md:col-span-1 row-span-2", photo: PHOTOS[7] },
+    { src: img4, alt: "Miles Apart", label: "Long Distance", span: "col-span-1 md:col-span-2 row-span-1", photo: PHOTOS[4] },
   ];
 
   return (
-    <section ref={sectionRef} className="px-6 md:px-12 py-20 md:py-32 max-w-[1600px] mx-auto">
-      <div ref={titleRef} className="mb-10 md:mb-14 flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <section ref={sectionRef} className="px-8 md:px-12 py-24 md:py-36">
+      <div ref={titleRef} className="mb-12 md:mb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.28em] mb-2" style={{ fontFamily: "'DM Mono', monospace", color: "#c9a0a6" }}>Curated Layout</p>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem,4vw,3.4rem)", color: "#f0ece6", fontWeight: 400 }}>
-            Featured <em>Bento</em> Grid
-          </h2>
+          <p className="text-[11px] uppercase tracking-[0.28em] mb-3 font-mono" style={{ color: "#c9a0a6" }}>Selected Works</p>
+          <div>
+            {["Captured in", "Light"].map((l, i) => (
+              <div key={i} style={{ overflow: "hidden" }}>
+                <div ref={el => { lineRefs.current[i] = el; }} style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2.2rem,4.5vw,4rem)", color: "#f0ece6", fontWeight: 400, lineHeight: 1.1, letterSpacing: "-0.018em", fontStyle: i === 1 ? "italic" : "normal" }}>
+                  {l}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        <p className="text-sm max-w-xs text-white/40 font-light">
-          Click any photograph to view in 100% full uncropped resolution modal.
+        <p className="text-sm max-w-xs font-light" style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(240,236,230,0.45)", lineHeight: 1.7 }}>
+          A curated selection from the full archive. Each frame, a frozen breath.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-        {bentoItems.map((photo) => (
-          <div
-            key={photo.id}
-            data-hover
-            onClick={() => onOpenLightbox(photo)}
-            className="bento-cell relative flex flex-col justify-between overflow-hidden rounded-xl p-4 cursor-pointer group bg-stone-950/80 border border-white/10 hover:border-[#c9a0a6]/60 transition-all duration-500"
-            style={{ minHeight: "360px" }}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] px-2.5 py-1 rounded tracking-[0.18em] uppercase font-mono text-[#c9a0a6] bg-[#c9a0a6]/10 border border-[#c9a0a6]/20">
-                {photo.cat}
-              </span>
-              <span className="text-[10px] tracking-[0.2em] font-mono text-white/40">
-                {photo.year}
-              </span>
-            </div>
-
-            {/* Complete Full-Size Container */}
-            <div className="flex-1 w-full flex items-center justify-center bg-black/50 rounded-lg p-2 overflow-hidden">
-              <ImageWithFallback
-                src={photo.src}
-                alt={photo.alt}
-                className="max-w-full max-h-[280px] w-auto h-auto object-contain transition-transform duration-700 group-hover:scale-[1.05]"
-              />
-            </div>
-
-            <div className="mt-3 flex items-center justify-between">
-              <div>
-                <h3 className="text-base font-serif italic text-[#f0ece6]">{photo.label}</h3>
-                <p className="text-[11px] text-white/40 line-clamp-1 font-sans">{photo.desc}</p>
-              </div>
-              <span className="text-xs text-[#c9a0a6] font-mono group-hover:translate-x-1 transition-transform duration-300">↗</span>
-            </div>
-          </div>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 auto-rows-[260px] md:auto-rows-[300px]">
+        {bentoItems.map((item, i) => (
+          <BentoCell key={i} item={item} index={i} onOpenLightbox={onOpenLightbox} />
         ))}
       </div>
     </section>
   );
 }
 
-/* ─── Manifesto Section ─────────────────────────────────────── */
+function BentoCell({ item, index, onOpenLightbox }: { item: { src: string; alt: string; label: string; span: string; photo: typeof PHOTOS[0] }; index: number; onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div
+      className={`bento-cell relative overflow-hidden rounded-lg bg-stone-900/60 p-2 ${item.span}`}
+      data-hover
+      onClick={() => onOpenLightbox(item.photo)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{ cursor: "pointer", border: "1px solid rgba(240,236,230,0.08)" }}
+    >
+      <ImageWithFallback
+        src={item.src}
+        alt={item.alt}
+        className="w-full h-full object-cover md:object-contain rounded transition-transform duration-700"
+        style={{ transform: hovered ? "scale(1.06)" : "scale(1)", willChange: "transform" }}
+      />
+      <div className="absolute inset-0 transition-opacity duration-500 pointer-events-none" style={{ background: "linear-gradient(135deg, transparent 40%, rgba(8,8,8,0.75) 100%)", opacity: hovered ? 1 : 0.35 }} />
+      <div className="absolute bottom-5 left-5 transition-all duration-400" style={{ opacity: hovered ? 1 : 0, transform: hovered ? "translateY(0)" : "translateY(8px)" }}>
+        <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", color: "#f0ece6", fontStyle: "italic" }}>{item.label}</span>
+      </div>
+      <div className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center transition-all duration-300 rounded-full" style={{ background: "rgba(8,8,8,0.65)", backdropFilter: "blur(8px)", opacity: hovered ? 1 : 0 }}>
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 10L10 1M10 1H3M10 1V8" stroke="#c9a0a6" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Manifesto ────────────────────────────────────────────── */
 
 function Manifesto() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -690,46 +682,45 @@ function Manifesto() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.to(bgImgRef.current, {
-        yPercent: -15,
+        yPercent: -20,
         ease: "none",
         scrollTrigger: { trigger: sectionRef.current, start: "top bottom", end: "bottom top", scrub: true },
       });
       lineRefs.current.forEach((el, i) => {
         if (!el) return;
         gsap.from(el, {
-          yPercent: 115, opacity: 0, duration: 1.1, delay: i * 0.12, ease: "expo.out",
-          scrollTrigger: { trigger: sectionRef.current, start: "top 70%" },
+          yPercent: 115, opacity: 0, duration: 1.2, delay: i * 0.15, ease: "expo.out",
+          scrollTrigger: { trigger: sectionRef.current, start: "top 65%" },
         });
       });
     }, sectionRef);
     return () => ctx.revert();
   }, []);
 
-  const verses = ["“A photograph", "is a pause button", "for life.”"];
+  const verses = ["“A photograph", "is a pause", "button for life.”"];
 
   return (
-    <section ref={sectionRef} className="relative flex items-center justify-center text-center overflow-hidden min-h-[90svh] py-20 px-6">
-      <div ref={bgImgRef} className="absolute inset-0 flex items-center justify-center bg-black" style={{ willChange: "transform" }}>
-        <ImageWithFallback src={img3} alt="Manifesto backdrop" className="w-full h-full object-cover opacity-30 filter blur-[2px]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-stone-950 via-stone-950/70 to-stone-950" />
+    <section ref={sectionRef} className="relative flex items-center justify-center text-center overflow-hidden" style={{ minHeight: "100svh" }}>
+      <div ref={bgImgRef} className="absolute inset-0 flex items-center justify-center scale-[1.25]" style={{ willChange: "transform" }}>
+        <ImageWithFallback src={img3} alt="Manifesto backdrop" className="w-full h-full object-cover md:object-contain opacity-40" />
+        <div className="absolute inset-0" style={{ background: "rgba(8,8,8,0.75)" }} />
       </div>
-
-      <div className="relative z-10 max-w-3xl mx-auto">
-        <p className="text-[11px] uppercase tracking-[0.32em] mb-8 font-mono text-[#c9a0a6]">
+      <div className="relative z-10 px-8 py-20 max-w-3xl mx-auto">
+        <p className="text-[11px] uppercase tracking-[0.32em] mb-10 font-mono" style={{ color: "#c9a0a6" }}>
           On Photography
         </p>
         {verses.map((v, i) => (
           <div key={i} style={{ overflow: "hidden" }}>
-            <div ref={el => { lineRefs.current[i] = el; }} className="leading-tight font-serif italic text-[#f0ece6]" style={{ fontSize: "clamp(2.2rem,5.5vw,5rem)" }}>
+            <div ref={el => { lineRefs.current[i] = el; }} className="leading-tight" style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2.4rem,6vw,5.5rem)", color: "#f0ece6", fontWeight: 400, fontStyle: "italic", letterSpacing: "-0.02em" }}>
               {v}
             </div>
           </div>
         ))}
         <div style={{ overflow: "hidden" }}>
-          <div ref={el => { lineRefs.current[3] = el; }} className="mt-8 flex items-center justify-center gap-4">
-            <div className="h-px w-10 bg-[#c9a0a6]" />
-            <span className="text-[11px] tracking-[0.24em] uppercase font-mono text-white/40">Full Resolution Preserved</span>
-            <div className="h-px w-10 bg-[#c9a0a6]" />
+          <div ref={el => { lineRefs.current[3] = el; }} className="mt-10 flex items-center justify-center gap-4">
+            <div className="h-px w-10" style={{ background: "#c9a0a6" }} />
+            <span className="text-[11px] tracking-[0.24em] uppercase font-mono" style={{ color: "rgba(240,236,230,0.5)" }}>Unknown</span>
+            <div className="h-px w-10" style={{ background: "#c9a0a6" }} />
           </div>
         </div>
       </div>
@@ -739,70 +730,108 @@ function Manifesto() {
 
 /* ─── Film Strip ───────────────────────────────────────────── */
 
-function FilmStrip({ onOpenLightbox }: { onOpenLightbox: (photo: PhotoItem) => void }) {
+function FilmStrip({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
   const sectionRef = useRef<HTMLElement>(null);
-  const strip = PHOTOS.slice(5, 10);
+  const titleRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(titleRef.current, {
+        opacity: 0, y: 24, duration: 0.8,
+        scrollTrigger: { trigger: titleRef.current, start: "top 85%" },
+      });
+      gsap.from(".film-cell", {
+        opacity: 0, scaleY: 0.85, transformOrigin: "bottom center", stagger: 0.1, duration: 1, ease: "expo.out",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 72%" },
+      });
+    }, sectionRef);
+    return () => ctx.revert();
+  }, []);
+
+  const strip = [img5, img6, img7, img8, img9];
 
   return (
-    <section ref={sectionRef} className="px-6 md:px-12 py-20 md:py-32">
-      <div className="mb-10 flex items-end justify-between">
+    <section ref={sectionRef} className="px-8 md:px-12 py-24 md:py-32">
+      <div ref={titleRef} className="mb-10 md:mb-14 flex items-end justify-between">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.28em] mb-2 font-mono text-[#c9a0a6]">Close-Up Moments</p>
-          <h2 className="font-serif text-3xl md:text-5xl text-[#f0ece6]">The <em>Details</em></h2>
+          <p className="text-[11px] uppercase tracking-[0.28em] mb-2 font-mono" style={{ color: "#c9a0a6" }}>Close-Ups</p>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.8rem,3.5vw,3rem)", color: "#f0ece6", fontWeight: 400 }}>The <em>Details</em></h2>
         </div>
-        <span className="text-[11px] uppercase tracking-[0.2em] font-mono text-white/30">05 Full-Size Frames</span>
+        <span className="text-[11px] uppercase tracking-[0.2em] font-mono" style={{ color: "rgba(240,236,230,0.3)" }}>05 frames</span>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-        {strip.map((photo) => (
-          <div
-            key={photo.id}
-            data-hover
-            onClick={() => onOpenLightbox(photo)}
-            className="group relative flex flex-col justify-between p-3 rounded-lg bg-stone-900/60 border border-white/10 hover:border-[#c9a0a6]/60 transition-all duration-400 cursor-pointer"
-            style={{ minHeight: "320px" }}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[9px] font-mono uppercase tracking-widest text-[#c9a0a6]">{photo.cat}</span>
-              <span className="text-[9px] font-mono text-white/30">{photo.year}</span>
-            </div>
-
-            {/* Complete Full-Size Container */}
-            <div className="flex-1 w-full flex items-center justify-center bg-black/60 rounded p-2 overflow-hidden">
-              <ImageWithFallback
-                src={photo.src}
-                alt={photo.label}
-                className="max-w-full max-h-[220px] w-auto h-auto object-contain transition-transform duration-500 group-hover:scale-105"
-              />
-            </div>
-
-            <div className="mt-2 text-center">
-              <span className="block font-serif italic text-sm text-[#f0ece6]">{photo.label}</span>
-            </div>
-          </div>
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        {strip.map((src, i) => (
+          <FilmCell key={i} src={src} label={PHOTOS[5 + i].label} photo={PHOTOS[5 + i]} index={i} onOpenLightbox={onOpenLightbox} />
         ))}
       </div>
     </section>
+  );
+}
+
+function FilmCell({ src, label, photo, index, onOpenLightbox }: { src: string; label: string; photo: typeof PHOTOS[0]; index: number; onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
+  const [hovered, setHovered] = useState(false);
+  const heights = ["420px", "360px", "480px", "400px", "440px"];
+  return (
+    <div
+      className="film-cell relative overflow-hidden rounded-lg bg-stone-900/60 p-2 col-span-1 cursor-pointer"
+      style={{ height: heights[index], border: "1px solid rgba(240,236,230,0.08)" }}
+      data-hover
+      onClick={() => onOpenLightbox(photo)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <ImageWithFallback
+        src={src}
+        alt={label}
+        className="w-full h-full object-cover md:object-contain rounded transition-transform duration-700"
+        style={{ transform: hovered ? "scale(1.07)" : "scale(1)", willChange: "transform" }}
+      />
+      <div className="absolute inset-0 transition-opacity duration-500 pointer-events-none" style={{ background: "linear-gradient(to top, rgba(8,8,8,0.85) 0%, transparent 50%)", opacity: hovered ? 1 : 0.4 }} />
+      <div className="absolute bottom-0 left-0 right-0 p-4 transition-all duration-400" style={{ transform: hovered ? "translateY(0)" : "translateY(6px)", opacity: hovered ? 1 : 0.8 }}>
+        <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "1rem", color: "#f0ece6", fontStyle: "italic" }}>{label}</span>
+      </div>
+    </div>
   );
 }
 
 /* ─── Stats ─────────────────────────────────────────────────── */
 
 function Stats() {
+  const sectionRef = useRef<HTMLElement>(null);
   const items = [
-    { value: "10", label: "Full-Size Photos" },
+    { value: "10", label: "Photographs" },
     { value: "2+", label: "Years Together" },
-    { value: "100%", label: "Uncropped Quality" },
     { value: "∞", label: "Memories Made" },
+    { value: "1", label: "Story Told" },
   ];
 
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(".stat-row", {
+        opacity: 0, y: 32, stagger: 0.1, duration: 0.9, ease: "expo.out",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 78%" },
+      });
+      gsap.from(".stat-divider", {
+        scaleX: 0, stagger: 0.08, duration: 1, ease: "expo.out", transformOrigin: "left",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 80%" },
+      });
+    }, sectionRef);
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="px-6 md:px-12 py-20 max-w-[1600px] mx-auto border-t border-white/10">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-        {items.map(({ value, label }) => (
-          <div key={label} className="flex flex-col">
-            <span className="font-serif text-4xl md:text-6xl text-[#f0ece6] leading-none mb-2">{value}</span>
-            <span className="text-[11px] tracking-[0.2em] uppercase font-mono text-white/40">{label}</span>
+    <section ref={sectionRef} className="px-8 md:px-12 py-24 md:py-32 max-w-[1600px] mx-auto">
+      <div className="mb-12">
+        <p className="text-[11px] uppercase tracking-[0.28em] mb-3 font-mono" style={{ color: "#c9a0a6" }}>By the Numbers</p>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem,4vw,3.5rem)", color: "#f0ece6", fontWeight: 400 }}>The <em>Archive</em></h2>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-0">
+        {items.map(({ value, label }, i) => (
+          <div key={label} className="stat-row pr-8 md:pr-12 py-8 md:py-0" style={{ borderRight: i < 3 ? "1px solid rgba(240,236,230,0.07)" : "none", borderBottom: "none" }}>
+            <div className="stat-divider mb-4 h-px w-full" style={{ background: "rgba(240,236,230,0.08)" }} />
+            <span className="block leading-none mb-2" style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(3rem,5vw,5rem)", color: "#f0ece6", fontWeight: 400 }}>{value}</span>
+            <span className="text-[11px] tracking-[0.22em] uppercase font-mono" style={{ color: "rgba(240,236,230,0.4)" }}>{label}</span>
           </div>
         ))}
       </div>
@@ -810,21 +839,10 @@ function Stats() {
   );
 }
 
-/* ─── Interactive Lightbox Modal (100% Full-Size Uncropped View) ─── */
+/* ─── Lightbox Modal ────────────────────────────────────────── */
 
-function LightboxModal({
-  photo,
-  onClose,
-  onPrev,
-  onNext,
-}: {
-  photo: PhotoItem | null;
-  onClose: () => void;
-  onPrev: () => void;
-  onNext: () => void;
-}) {
+function LightboxModal({ photo, onClose, onPrev, onNext }: { photo: typeof PHOTOS[0] | null; onClose: () => void; onPrev: () => void; onNext: () => void }) {
   const modalRef = useRef<HTMLDivElement>(null);
-  const imgRef = useRef<HTMLImageElement>(null);
   const [zoomed, setZoomed] = useState(false);
 
   useEffect(() => {
@@ -839,11 +857,7 @@ function LightboxModal({
     window.addEventListener("keydown", onKeyDown);
 
     if (modalRef.current) {
-      gsap.fromTo(
-        modalRef.current,
-        { opacity: 0, scale: 0.95 },
-        { opacity: 1, scale: 1, duration: 0.4, ease: "power3.out" }
-      );
+      gsap.fromTo(modalRef.current, { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.4, ease: "power3.out" });
     }
 
     return () => window.removeEventListener("keydown", onKeyDown);
@@ -852,77 +866,45 @@ function LightboxModal({
   if (!photo) return null;
 
   return (
-    <div
-      ref={modalRef}
-      className="fixed inset-0 z-[99999] flex flex-col justify-between p-4 md:p-8 bg-black/95 backdrop-blur-2xl text-white transition-opacity duration-300"
-    >
-      {/* Top Controls */}
+    <div ref={modalRef} className="fixed inset-0 z-[99999] flex flex-col justify-between p-4 md:p-8 bg-black/95 backdrop-blur-2xl text-white">
       <div className="flex items-center justify-between z-10">
+        <span className="text-xs font-mono uppercase tracking-widest text-[#c9a0a6] px-3 py-1 rounded bg-[#c9a0a6]/10 border border-[#c9a0a6]/30">
+          {photo.cat} · {photo.year}
+        </span>
         <div className="flex items-center gap-3">
-          <span className="text-xs font-mono uppercase tracking-widest text-[#c9a0a6] bg-[#c9a0a6]/10 px-3 py-1 rounded border border-[#c9a0a6]/30">
-            {photo.cat}
-          </span>
-          <span className="text-xs font-mono text-white/40">
-            {photo.id + 1} / {PHOTOS.length}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setZoomed(!zoomed)}
-            className="text-xs font-mono tracking-wider px-3 py-1.5 rounded bg-white/10 hover:bg-white/20 transition-colors"
-          >
-            {zoomed ? "Reset Zoom (1x)" : "Zoom (1.8x)"}
+          <button onClick={() => setZoomed(!zoomed)} className="text-xs font-mono px-3 py-1.5 rounded bg-white/10 hover:bg-white/20">
+            {zoomed ? "Reset (1x)" : "Zoom (1.8x)"}
           </button>
-          <button
-            onClick={onClose}
-            className="w-9 h-9 rounded-full bg-white/10 hover:bg-red-500/80 flex items-center justify-center text-sm font-bold transition-all"
-          >
+          <button onClick={onClose} className="w-9 h-9 rounded-full bg-white/10 hover:bg-red-500 flex items-center justify-center font-bold">
             ✕
           </button>
         </div>
       </div>
 
-      {/* Main Full-Size Image Frame */}
       <div className="relative flex-1 flex items-center justify-center my-4 overflow-hidden">
-        {/* Previous Button */}
-        <button
-          onClick={onPrev}
-          className="absolute left-2 md:left-6 z-20 w-12 h-12 rounded-full bg-stone-900/80 border border-white/20 hover:bg-[#c9a0a6] hover:text-black flex items-center justify-center transition-all"
-        >
+        <button onClick={onPrev} className="absolute left-2 md:left-6 z-20 w-12 h-12 rounded-full bg-stone-900/80 border border-white/20 hover:bg-[#c9a0a6] hover:text-black flex items-center justify-center transition-all">
           ←
         </button>
-
-        {/* Complete Uncropped Image */}
         <div className="w-full h-full flex items-center justify-center overflow-auto p-2">
           <img
-            ref={imgRef}
             src={photo.src}
             alt={photo.alt}
-            className="max-w-full max-h-[80vh] w-auto h-auto object-contain transition-transform duration-500 shadow-2xl rounded"
+            className="max-w-full max-h-[80vh] w-auto h-auto object-contain transition-transform duration-500 rounded shadow-2xl"
             style={{ transform: zoomed ? "scale(1.8)" : "scale(1)", cursor: zoomed ? "zoom-out" : "zoom-in" }}
             onClick={() => setZoomed(!zoomed)}
           />
         </div>
-
-        {/* Next Button */}
-        <button
-          onClick={onNext}
-          className="absolute right-2 md:right-6 z-20 w-12 h-12 rounded-full bg-stone-900/80 border border-white/20 hover:bg-[#c9a0a6] hover:text-black flex items-center justify-center transition-all"
-        >
+        <button onClick={onNext} className="absolute right-2 md:right-6 z-20 w-12 h-12 rounded-full bg-stone-900/80 border border-white/20 hover:bg-[#c9a0a6] hover:text-black flex items-center justify-center transition-all">
           →
         </button>
       </div>
 
-      {/* Bottom Metadata Bar */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-4 border-t border-white/10 z-10">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-3 pt-3 border-t border-white/10 z-10">
         <div>
-          <h2 className="font-serif text-2xl text-[#f0ece6] italic">{photo.label} ({photo.year})</h2>
-          <p className="text-xs text-white/50 font-sans max-w-xl">{photo.desc}</p>
+          <h2 className="font-serif text-2xl text-[#f0ece6] italic">{photo.label}</h2>
+          <p className="text-xs text-white/50 font-sans">{photo.desc}</p>
         </div>
-        <div className="text-xs font-mono text-white/30">
-          Use ← → Arrow Keys to Navigate · ESC to Close
-        </div>
+        <span className="text-xs font-mono text-white/30">Use ← → Arrow Keys to Navigate · ESC to Close</span>
       </div>
     </div>
   );
@@ -931,35 +913,47 @@ function LightboxModal({
 /* ─── Footer ─────────────────────────────────────────────────── */
 
 function Footer() {
+  const footerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(".footer-content", {
+        opacity: 0, y: 24, stagger: 0.08, duration: 0.9, ease: "expo.out",
+        scrollTrigger: { trigger: footerRef.current, start: "top 90%" },
+      });
+    }, footerRef);
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <footer className="px-6 md:px-12 pt-16 pb-10 border-t border-white/10 bg-stone-950">
-      <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-8 mb-12">
-        <div>
-          <p className="text-[11px] uppercase tracking-[0.28em] mb-3 font-mono text-[#c9a0a6]">Frames — Full-Size Archive</p>
-          <h2 className="font-serif text-3xl md:text-5xl text-[#f0ece6]">
-            Every frame,<br /><em>complete & true.</em>
+    <footer ref={footerRef} className="px-8 md:px-12 pt-16 pb-10" style={{ borderTop: "1px solid rgba(240,236,230,0.07)" }}>
+      <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-10 mb-16">
+        <div className="footer-content">
+          <p className="text-[11px] uppercase tracking-[0.28em] mb-4 font-mono" style={{ color: "#c9a0a6" }}>Frames — Personal Archive</p>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2.4rem,5vw,4.5rem)", color: "#f0ece6", fontWeight: 400, letterSpacing: "-0.02em" }}>
+            Every frame,<br /><em>a feeling.</em>
           </h2>
         </div>
-        <div className="flex items-center gap-6 text-xs font-mono text-white/50">
-          <span>10 Photographs</span>
-          <span>·</span>
-          <span>100% Unclipped Quality</span>
+        <div className="footer-content flex flex-col gap-3">
+          {["Instagram", "Contact", "Prints"].map(n => (
+            <button key={n} data-hover className="text-sm text-left transition-opacity hover:opacity-50" style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(240,236,230,0.5)", fontWeight: 300, background: "none", border: "none", cursor: "pointer" }}>{n}</button>
+          ))}
         </div>
       </div>
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-6 border-t border-white/10 text-xs font-mono text-white/30">
-        <span className="font-serif italic text-white/80">Frames</span>
-        <span>© 2024–2026 · All memories reserved · Crafted with GSAP & Lenis</span>
+      <div className="footer-content flex flex-col md:flex-row items-start md:items-center justify-between gap-3 pt-6" style={{ borderTop: "1px solid rgba(240,236,230,0.06)" }}>
+        <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "0.95rem", color: "#f0ece6", fontStyle: "italic" }}>Frames</span>
+        <span className="text-[11px] tracking-[0.15em] font-mono" style={{ color: "rgba(240,236,230,0.3)" }}>© 2024–2026 · All memories reserved · Crafted with care</span>
       </div>
     </footer>
   );
 }
 
-/* ─── Main App ──────────────────────────────────────────────── */
+/* ─── App ───────────────────────────────────────────────────── */
 
 export default function App() {
   const [loaded, setLoaded] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<string>("All");
-  const [activePhoto, setActivePhoto] = useState<PhotoItem | null>(null);
+  const [activePhoto, setActivePhoto] = useState<typeof PHOTOS[0] | null>(null);
+  const lenisRef = useRef<Lenis | null>(null);
 
   const handleLoaded = useCallback(() => setLoaded(true), []);
 
@@ -971,6 +965,7 @@ export default function App() {
       easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       touchMultiplier: 2,
     });
+    lenisRef.current = lenis;
 
     const onScroll = () => ScrollTrigger.update();
     lenis.on("scroll", onScroll);
@@ -987,23 +982,29 @@ export default function App() {
     };
   }, [loaded]);
 
-  const handlePrevPhoto = () => {
+  const handlePrev = () => {
     if (!activePhoto) return;
-    const idx = PHOTOS.findIndex(p => p.id === activePhoto.id);
+    const idx = PHOTOS.findIndex(p => p.src === activePhoto.src);
     const prevIdx = (idx - 1 + PHOTOS.length) % PHOTOS.length;
     setActivePhoto(PHOTOS[prevIdx]);
   };
 
-  const handleNextPhoto = () => {
+  const handleNext = () => {
     if (!activePhoto) return;
-    const idx = PHOTOS.findIndex(p => p.id === activePhoto.id);
+    const idx = PHOTOS.findIndex(p => p.src === activePhoto.src);
     const nextIdx = (idx + 1) % PHOTOS.length;
     setActivePhoto(PHOTOS[nextIdx]);
   };
 
   return (
-    <div style={{ background: "#080808", minHeight: "100svh", overflowX: "hidden", color: "#f0ece6" }}>
+    <div style={{ background: "#080808", minHeight: "100svh", overflowX: "hidden" }}>
       <style>{`
+        @keyframes scrollLine {
+          0% { transform: translateY(-100%); opacity: 0; }
+          20% { opacity: 1; }
+          80% { opacity: 1; }
+          100% { transform: translateY(220%); opacity: 0; }
+        }
         * { cursor: default; }
         @media (hover: hover) {
           *[data-hover] { cursor: pointer !important; }
@@ -1015,21 +1016,40 @@ export default function App() {
 
       <Preloader onComplete={handleLoaded} />
 
-      <div style={{ opacity: loaded ? 1 : 0, transition: "opacity 0.6s ease 0.2s" }}>
+      <div style={{ opacity: loaded ? 1 : 0, transition: "opacity 0.5s ease 0.2s" }}>
         <Cursor />
-        <Nav activeCategory={activeCategory} onSelectCategory={setActiveCategory} />
+        <Nav />
 
         <main>
           <Hero onOpenLightbox={setActivePhoto} />
-          <MarqueeStrip speed={45} />
+          <MarqueeStrip speed={55} />
 
           <EditorialIntro onOpenLightbox={setActivePhoto} />
 
-          <MarqueeStrip reverse speed={35} accent />
+          <MarqueeStrip reverse speed={40} accent />
 
-          <HorizontalGallery activeCategory={activeCategory} onOpenLightbox={setActivePhoto} />
+          <HorizontalGallery onOpenLightbox={setActivePhoto} />
 
-          <MarqueeStrip speed={55} />
+          <FeaturePhoto
+            photo={img6}
+            quote="A genuine laugh|is the most|beautiful portrait."
+            label="Her Laughter"
+            year="2024"
+            onOpenLightbox={setActivePhoto}
+          />
+
+          <div style={{ borderTop: "1px solid rgba(240,236,230,0.06)" }} />
+
+          <FeaturePhoto
+            photo={img4}
+            quote={"Distance is just|a test of how far|love can travel."}
+            label="Long Distance"
+            year="2023"
+            reverse
+            onOpenLightbox={setActivePhoto}
+          />
+
+          <MarqueeStrip speed={65} />
 
           <BentoGrid onOpenLightbox={setActivePhoto} />
 
@@ -1045,8 +1065,8 @@ export default function App() {
         <LightboxModal
           photo={activePhoto}
           onClose={() => setActivePhoto(null)}
-          onPrev={handlePrevPhoto}
-          onNext={handleNextPhoto}
+          onPrev={handlePrev}
+          onNext={handleNext}
         />
       </div>
     </div>
