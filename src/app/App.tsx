@@ -660,8 +660,11 @@ function HorizontalGallery({ onOpenLightbox }: { onOpenLightbox: (photo: typeof 
 function FramelessImageCard({ photo, index, onOpenLightbox }: { photo: typeof PHOTOS[0]; index: number; onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
   const imgRef = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
-  const heights = [520, 440, 580, 460, 500, 420, 560, 440, 520, 480];
-  const widths = [320, 260, 340, 280, 300, 260, 320, 280, 310, 290];
+  const heights = [520, 440, 580, 460, 500, 420, 560, 440, 520, 480, 530, 450, 570, 470, 510, 430, 550, 460, 500, 490];
+  const widths = [320, 260, 340, 280, 300, 260, 320, 280, 310, 290, 330, 270, 350, 290, 310, 270, 330, 290, 320, 300];
+
+  const cardWidth = widths[index % widths.length];
+  const cardHeight = heights[index % heights.length];
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = imgRef.current;
@@ -695,8 +698,8 @@ function FramelessImageCard({ photo, index, onOpenLightbox }: { photo: typeof PH
       onMouseLeave={handleMouseLeave}
       className="relative flex-shrink-0 overflow-hidden cursor-pointer"
       style={{
-        width: `${widths[index]}px`,
-        height: `${heights[index]}px`,
+        width: `${cardWidth}px`,
+        height: `${cardHeight}px`,
         maxWidth: "85vw",
         transformStyle: "preserve-3d",
         perspective: 1000,
@@ -723,7 +726,7 @@ function FramelessImageCard({ photo, index, onOpenLightbox }: { photo: typeof PH
         <span className="block text-xl font-serif italic" style={{ color: "#f0ece6", fontWeight: 400 }}>{photo.label}</span>
       </div>
       <div className="absolute top-4 right-4 transition-all duration-400" style={{ opacity: hovered ? 1 : 0 }}>
-        <span className="text-[11px] tracking-widest font-mono" style={{ color: "rgba(240,236,230,0.5)" }}>0{index + 1}</span>
+        <span className="text-[11px] tracking-widest font-mono" style={{ color: "rgba(240,236,230,0.5)" }}>{index + 1 < 10 ? `0${index + 1}` : index + 1}</span>
       </div>
     </div>
   );
@@ -1433,6 +1436,37 @@ export default function App() {
             label="Long Distance"
             year="2023"
             reverse
+            onOpenLightbox={setActivePhoto}
+          />
+
+          <div style={{ borderTop: "1px solid rgba(240,236,230,0.06)" }} />
+
+          <FeaturePhoto
+            photo={img16}
+            quote="Sacred devotion,|tradition & grace|in quiet harmony."
+            label="Blessed Moments"
+            year="2024"
+            onOpenLightbox={setActivePhoto}
+          />
+
+          <div style={{ borderTop: "1px solid rgba(240,236,230,0.06)" }} />
+
+          <FeaturePhoto
+            photo={img12}
+            quote="Her radiant smile|at the open door,|where journeys begin."
+            label="Journey Begins"
+            year="2024"
+            reverse
+            onOpenLightbox={setActivePhoto}
+          />
+
+          <div style={{ borderTop: "1px solid rgba(240,236,230,0.06)" }} />
+
+          <FeaturePhoto
+            photo={img10}
+            quote="Fingers intertwined,|a silent promise|under golden light."
+            label="Intertwined"
+            year="2024"
             onOpenLightbox={setActivePhoto}
           />
 
