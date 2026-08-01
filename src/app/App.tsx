@@ -429,7 +429,7 @@ function KineticTextRoom({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PH
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[85svh] min-h-[600px] my-16 overflow-hidden bg-[#080808] flex items-center justify-center select-none"
+      className="relative w-full h-[100svh] min-h-[650px] overflow-hidden bg-[#080808] flex items-center justify-center select-none"
       style={{ perspective: "1000px" }}
     >
       {/* 3D Perspective Room Container */}
@@ -450,7 +450,7 @@ function KineticTextRoom({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PH
             {[...topText, ...topText].map((t, idx) => (
               <div
                 key={idx}
-                className="text-[clamp(3.5rem,7vw,8rem)] font-black uppercase tracking-tighter leading-none"
+                className="text-[clamp(3.5rem,7vw,8.5rem)] font-black uppercase tracking-tighter leading-none"
                 style={{ color: idx % 2 === 0 ? "#818cf8" : "#a5b4fc" }}
               >
                 {t} · {t} · {t}
@@ -471,7 +471,7 @@ function KineticTextRoom({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PH
             {[...bottomText, ...bottomText].map((t, idx) => (
               <div
                 key={idx}
-                className="text-[clamp(3.5rem,7vw,8rem)] font-black uppercase tracking-tighter leading-none"
+                className="text-[clamp(3.5rem,7vw,8.5rem)] font-black uppercase tracking-tighter leading-none"
                 style={{ color: idx % 2 === 0 ? "#818cf8" : "#93c5fd" }}
               >
                 {t} · {t} · {t}
@@ -492,7 +492,7 @@ function KineticTextRoom({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PH
             {[...sideText, ...sideText].map((t, idx) => (
               <div
                 key={idx}
-                className="text-[clamp(3.5rem,7vw,8rem)] font-black uppercase tracking-tighter leading-none"
+                className="text-[clamp(3.5rem,7vw,8.5rem)] font-black uppercase tracking-tighter leading-none"
                 style={{
                   color: "#818cf8",
                   writingMode: "vertical-rl",
@@ -516,7 +516,7 @@ function KineticTextRoom({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PH
             {[...sideText, ...sideText].map((t, idx) => (
               <div
                 key={idx}
-                className="text-[clamp(3.5rem,7vw,8rem)] font-black uppercase tracking-tighter leading-none"
+                className="text-[clamp(3.5rem,7vw,8.5rem)] font-black uppercase tracking-tighter leading-none"
                 style={{
                   color: "#a5b4fc",
                   writingMode: "vertical-rl",
@@ -528,26 +528,39 @@ function KineticTextRoom({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PH
           </div>
         </div>
 
-        {/* Center Interactive Portal Box */}
+        {/* Center Opening Hero Portal Box */}
         <div
           data-hover
-          onClick={() => onOpenLightbox(PHOTOS[0])}
-          className="relative z-30 w-72 h-44 sm:w-96 sm:h-56 md:w-[480px] md:h-[280px] rounded-2xl overflow-hidden border border-indigo-400/40 shadow-[0_0_90px_rgba(129,140,248,0.4)] cursor-pointer group bg-black"
-          style={{ transform: "translateZ(80px)" }}
+          onClick={() => onOpenLightbox(PHOTOS[9])}
+          className="relative z-30 w-80 h-52 sm:w-[420px] sm:h-[260px] md:w-[540px] md:h-[320px] rounded-2xl overflow-hidden border border-indigo-400/40 shadow-[0_0_100px_rgba(129,140,248,0.45)] cursor-pointer group bg-black"
+          style={{ transform: "translateZ(90px)" }}
         >
           <ImageWithFallback
-            src={PHOTOS[0].src}
-            alt="Center portal"
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
+            src={img9}
+            alt="Hero background of us"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-85 group-hover:opacity-100"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-6">
-            <span className="text-[10px] font-mono uppercase tracking-[0.28em] text-indigo-300 mb-1">
-              Interactive 3D Portal
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent flex flex-col justify-end p-6 md:p-8">
+            <span className="text-[11px] font-mono uppercase tracking-[0.3em] text-indigo-300 mb-2">
+              A Personal Collection · 2023–2024
             </span>
-            <span className="font-serif italic text-2xl text-white">
-              Explore The Vault →
-            </span>
+            <h1 className="font-serif italic text-3xl md:text-5xl text-white font-normal mb-1">
+              Our Beautiful Story
+            </h1>
+            <p className="text-xs text-white/60 font-sans font-light">
+              Click to view photo · Scroll to explore the archive ↓
+            </p>
           </div>
+        </div>
+      </div>
+
+      {/* Scroll Down Indicator */}
+      <div className="absolute bottom-8 z-40 flex flex-col items-center gap-2 pointer-events-none">
+        <span className="text-[10px] tracking-[0.25em] uppercase font-mono text-indigo-200/50">
+          Scroll Down
+        </span>
+        <div className="w-4 h-7 rounded-full border border-indigo-300/30 flex items-start justify-center p-1">
+          <div className="w-1 h-2 bg-indigo-300 rounded-full animate-bounce" />
         </div>
       </div>
     </section>
@@ -1373,12 +1386,11 @@ export default function App() {
         <Nav />
 
         <main>
+          <KineticTextRoom onOpenLightbox={setActivePhoto} />
           <Hero onOpenLightbox={setActivePhoto} />
           <MarqueeStrip speed={55} />
 
           <EditorialIntro onOpenLightbox={setActivePhoto} />
-
-          <KineticTextRoom onOpenLightbox={setActivePhoto} />
 
           <MarqueeStrip reverse speed={40} accent />
 
