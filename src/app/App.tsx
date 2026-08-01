@@ -1223,6 +1223,63 @@ function PolaroidFanDeck({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PH
   );
 }
 
+/* ─── Full Width Bottom Banner (Edge-to-Edge Widescreen) ───── */
+
+function FullWidthBottomBanner({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const imgRef = useRef<HTMLDivElement>(null);
+  const matchedPhoto = PHOTOS.find(p => p.src === img13) || PHOTOS[13];
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.to(imgRef.current, {
+        scale: 1.08,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    }, sectionRef);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      data-hover
+      onClick={() => onOpenLightbox(matchedPhoto)}
+      className="relative w-full h-[55vh] sm:h-[65vh] md:h-[80vh] overflow-hidden bg-black cursor-pointer my-12 md:my-20"
+    >
+      <div ref={imgRef} className="w-full h-full flex items-center justify-center">
+        <ImageWithFallback
+          src={img13}
+          alt="Golden Hour Silhouette"
+          className="w-full h-full object-cover object-center"
+        />
+      </div>
+
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/20 pointer-events-none" />
+
+      <div className="absolute bottom-10 left-6 right-6 md:bottom-16 md:left-14 md:right-14 flex flex-col md:flex-row md:items-end justify-between gap-4 pointer-events-none">
+        <div>
+          <span className="text-[10px] md:text-[11px] uppercase tracking-[0.32em] font-mono text-[#c9a0a6] mb-2 block">
+            Golden Hour · 2024
+          </span>
+          <h2 className="font-serif italic text-3xl sm:text-4xl md:text-6xl text-[#f0ece6] font-normal leading-tight">
+            Two souls, one horizon.
+          </h2>
+        </div>
+        <span className="text-xs font-mono tracking-[0.2em] uppercase text-white/40">
+          Full Width View ↗
+        </span>
+      </div>
+    </section>
+  );
+}
+
 /* ─── Lightbox Modal ────────────────────────────────────────── */
 
 function LightboxModal({ photo, onClose, onPrev, onNext }: { photo: typeof PHOTOS[0] | null; onClose: () => void; onPrev: () => void; onNext: () => void }) {
@@ -1496,6 +1553,8 @@ export default function App() {
           <FilmStrip onOpenLightbox={setActivePhoto} />
 
           <PolaroidFanDeck onOpenLightbox={setActivePhoto} />
+
+          <FullWidthBottomBanner onOpenLightbox={setActivePhoto} />
         </main>
 
         <Footer />
