@@ -14,6 +14,17 @@ import img6 from "@/imports/image-6.png";
 import img7 from "@/imports/image-7.png";
 import img8 from "@/imports/image-8.png";
 import img9 from "@/imports/image-9.png";
+import img10 from "@/imports/image-10.png";
+import img11 from "@/imports/image-11.png";
+import img12 from "@/imports/image-12.png";
+import img13 from "@/imports/image-13.png";
+import img14 from "@/imports/image-14.jpg";
+import img15 from "@/imports/image-15.png";
+import img16 from "@/imports/image-16.png";
+import img17 from "@/imports/image-17.png";
+import img18 from "@/imports/image-18.png";
+import img19 from "@/imports/image-19.png";
+
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -27,7 +38,17 @@ const PHOTOS = [
   { src: img6, alt: "Her laughter", label: "Laughter", year: "2024", cat: "Candid", desc: "The purest expression of genuine happiness." },
   { src: img7, alt: "Shy moment", label: "Shy", year: "2024", cat: "Portrait", desc: "Gentle emotions captured in a glance." },
   { src: img8, alt: "Together indoors", label: "Home", year: "2024", cat: "Portrait", desc: "Sanctuary created wherever we are together." },
-  { src: img9, alt: "Selfie moment", label: "Us Again", year: "2024", cat: "Portrait", desc: "Preserving everyday memories side-by-side." },
+  { id: 9, src: img9, alt: "Selfie moment", label: "Us Again", year: "2024", cat: "Portrait", desc: "Preserving everyday memories side-by-side forever." },
+  { id: 10, src: img10, alt: "Holding hands", label: "Intertwined", year: "2024", cat: "Candid", desc: "Fingers intertwined, a silent promise in warm golden light." },
+  { id: 11, src: img11, alt: "Hands in monochrome", label: "Timeless Touch", year: "2024", cat: "Edit", desc: "A timeless black-and-white frame of hands that hold the world." },
+  { id: 12, src: img12, alt: "Train door smile", label: "Journey Begins", year: "2024", cat: "Candid", desc: "Her radiant smile at the train door, where every journey starts." },
+  { id: 13, src: img13, alt: "Silhouette together", label: "Golden Hour", year: "2024", cat: "Edit", desc: "Two silhouettes against the fading sky, lost in the moment." },
+  { id: 14, src: img14, alt: "Waiting at station", label: "The Wait", year: "2024", cat: "Candid", desc: "A quiet moment of waiting at the station, beauty in patience." },
+  { id: 15, src: img15, alt: "Fun selfie", label: "Playful Us", year: "2024", cat: "Portrait", desc: "Goofy filters and genuine laughter at the station together." },
+  { id: 16, src: img16, alt: "Temple visit", label: "Sacred Moments", year: "2023", cat: "Heritage", desc: "Exploring ancient temples, creating memories amidst heritage." },
+  { id: 17, src: img17, alt: "Indoor selfie", label: "Cozy Together", year: "2023", cat: "Portrait", desc: "Simple indoor moments that mean the most to us." },
+  { id: 18, src: img18, alt: "Temple selfie", label: "Heritage Duo", year: "2023", cat: "Heritage", desc: "Side by side at a sacred temple, tradition meets togetherness." },
+  { id: 19, src: img19, alt: "Movie night", label: "Cinema Date", year: "2024", cat: "Candid", desc: "Snuggled up in the theater, a cozy cinema date night." },
 ];
 
 const MARQUEE_ITEMS = ["MEMORIES", "·", "MOMENTS", "·", "FOREVER", "·", "LOVE", "·", "CANDID", "·", "STORIES", "·"];
