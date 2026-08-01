@@ -799,6 +799,198 @@ function FilmCell({ src, label, photo, index, onOpenLightbox }: { src: string; l
 
 
 
+/* ─── Polaroid Fan Deck Carousel ──────────────────────────── */
+
+function PolaroidFanDeck({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [dragStartX, setDragStartX] = useState<number | null>(null);
+
+  const handCaptions = [
+    "us together",
+    "candid smiles",
+    "heritage & roots",
+    "pure joy",
+    "miles apart",
+    "quiet stillness",
+    "her genuine laugh",
+    "shy glance",
+    "warm indoors",
+    "forever memory",
+  ];
+
+  const handlePrev = useCallback(() => {
+    setActiveIndex(prev => (prev - 1 + PHOTOS.length) % PHOTOS.length);
+  }, []);
+
+  const handleNext = useCallback(() => {
+    setActiveIndex(prev => (prev + 1) % PHOTOS.length);
+  }, []);
+
+  const handleTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    setDragStartX(clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent | React.MouseEvent) => {
+    if (dragStartX === null) return;
+    const clientX = 'changedTouches' in e ? e.changedTouches[0].clientX : e.clientX;
+    const diff = clientX - dragStartX;
+    if (diff > 40) handlePrev();
+    else if (diff < -40) handleNext();
+    setDragStartX(null);
+  };
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(sectionRef.current, {
+        opacity: 0,
+        y: 40,
+        duration: 1,
+        ease: "expo.out",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 75%" },
+      });
+    }, sectionRef);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="relative px-4 md:px-12 py-28 md:py-40 overflow-hidden select-none bg-[#080808]">
+      {/* Background Watermark Outlined Text */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.04]">
+        <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(6rem, 22vw, 24rem)", fontWeight: 900, color: "transparent", WebkitTextStroke: "2px #f0ece6", letterSpacing: "0.05em", whiteSpace: "nowrap" }}>
+          LIFETIME
+        </span>
+      </div>
+
+      <div className="relative z-10 max-w-6xl mx-auto text-center mb-12 md:mb-16">
+        <p className="text-[11px] uppercase tracking-[0.28em] mb-3 font-mono" style={{ color: "#c9a0a6" }}>Polaroid Deck</p>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 4vw, 3.6rem)", color: "#f0ece6", fontWeight: 400 }}>
+          The <em>Interactive</em> Stack
+        </h2>
+      </div>
+
+      {/* 3D Stack / Fan Container */}
+      <div
+        className="relative z-20 max-w-5xl mx-auto h-[480px] md:h-[560px] flex items-center justify-center cursor-grab active:cursor-grabbing"
+        onMouseDown={handleTouchStart}
+        onMouseUp={handleTouchEnd}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        {/* Left Arrow Button */}
+        <button
+          onClick={(e) => { e.stopPropagation(); handlePrev(); }}
+          data-hover
+          className="absolute left-2 md:left-8 z-50 w-12 h-12 md:w-14 md:h-14 rounded-full bg-stone-900/80 border border-white/15 hover:border-[#c9a0a6] hover:bg-[#c9a0a6] hover:text-black text-white text-xl flex items-center justify-center transition-all shadow-2xl"
+          aria-label="Previous Photo"
+        >
+          ‹
+        </button>
+
+        {/* Polaroid Cards Deck */}
+        <div className="relative w-full h-full flex items-center justify-center perspective-[1200px]">
+          {PHOTOS.map((photo, i) => {
+            const offset = (i - activeIndex + PHOTOS.length) % PHOTOS.length;
+            let relativeOffset = offset;
+            if (relativeOffset > PHOTOS.length / 2) {
+              relativeOffset -= PHOTOS.length;
+            }
+
+            const absOffset = Math.abs(relativeOffset);
+            const isCenter = relativeOffset === 0;
+
+            const rotateDeg = relativeOffset * 7.5;
+            const translateX = relativeOffset * (window.innerWidth < 768 ? 26 : 46);
+            const translateY = Math.abs(relativeOffset) * (window.innerWidth < 768 ? 8 : 12);
+            const scale = 1 - absOffset * 0.055;
+            const zIndex = 30 - absOffset;
+            const opacity = absOffset > 4 ? 0 : 1 - absOffset * 0.18;
+
+            return (
+              <div
+                key={i}
+                data-hover
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (isCenter) {
+                    onOpenLightbox(photo);
+                  } else {
+                    setActiveIndex(i);
+                  }
+                }}
+                className="absolute transition-all duration-700 ease-out origin-bottom cursor-pointer"
+                style={{
+                  transform: `translate3d(${translateX}px, ${translateY}px, 0px) rotate(${rotateDeg}deg) scale(${scale})`,
+                  zIndex,
+                  opacity,
+                  visibility: opacity <= 0 ? "hidden" : "visible",
+                  willChange: "transform, opacity",
+                }}
+              >
+                {/* Polaroid Frame */}
+                <div className="w-[280px] sm:w-[320px] md:w-[380px] bg-[#f7f3eb] p-3 sm:p-4 pb-6 sm:pb-8 rounded-[3px] shadow-[0_22px_55px_rgba(0,0,0,0.7)] border border-[#e5ded0]/60 transition-transform duration-300 hover:scale-[1.02]">
+                  {/* Photo Container */}
+                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-stone-900 rounded-[2px]">
+                    <ImageWithFallback
+                      src={photo.src}
+                      alt={photo.alt}
+                      className="w-full h-full object-cover"
+                      draggable={false}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
+                  </div>
+
+                  {/* Handwritten Blue Caption */}
+                  <div className="pt-4 text-center">
+                    <span
+                      style={{
+                        fontFamily: "'Caveat', 'Dancing Script', 'Playfair Display', cursive",
+                        fontSize: "clamp(1.4rem, 2.2vw, 1.8rem)",
+                        color: "#2563eb",
+                        fontWeight: 600,
+                        letterSpacing: "0.02em",
+                      }}
+                    >
+                      {handCaptions[i]}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Right Arrow Button */}
+        <button
+          onClick={(e) => { e.stopPropagation(); handleNext(); }}
+          data-hover
+          className="absolute right-2 md:right-8 z-50 w-12 h-12 md:w-14 md:h-14 rounded-full bg-stone-900/80 border border-white/15 hover:border-[#c9a0a6] hover:bg-[#c9a0a6] hover:text-black text-white text-xl flex items-center justify-center transition-all shadow-2xl"
+          aria-label="Next Photo"
+        >
+          ›
+        </button>
+      </div>
+
+      {/* Pagination Dots */}
+      <div className="relative z-20 flex items-center justify-center gap-2 mt-8 md:mt-12">
+        {PHOTOS.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => setActiveIndex(idx)}
+            className="w-2.5 h-2.5 rounded-full transition-all duration-300"
+            style={{
+              background: idx === activeIndex ? "#c9a0a6" : "rgba(240,236,230,0.2)",
+              transform: idx === activeIndex ? "scale(1.4)" : "scale(1)",
+            }}
+            aria-label={`Go to slide ${idx + 1}`}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 /* ─── Lightbox Modal ────────────────────────────────────────── */
 
 function LightboxModal({ photo, onClose, onPrev, onNext }: { photo: typeof PHOTOS[0] | null; onClose: () => void; onPrev: () => void; onNext: () => void }) {
@@ -1016,6 +1208,8 @@ export default function App() {
           <Manifesto />
 
           <FilmStrip onOpenLightbox={setActivePhoto} />
+
+          <PolaroidFanDeck onOpenLightbox={setActivePhoto} />
         </main>
 
         <Footer />
