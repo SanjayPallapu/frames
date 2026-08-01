@@ -759,11 +759,6 @@ function FeaturePhoto({ photo, quote, label, year, reverse = false, onOpenLightb
         ease: "expo.inOut",
         scrollTrigger: { trigger: sectionRef.current, start: "top 72%" },
       });
-      gsap.to(imgRef.current, {
-        yPercent: -16,
-        ease: "none",
-        scrollTrigger: { trigger: sectionRef.current, start: "top bottom", end: "bottom top", scrub: true },
-      });
       lineRefs.current.forEach((el, i) => {
         if (!el) return;
         gsap.from(el, {
@@ -777,16 +772,16 @@ function FeaturePhoto({ photo, quote, label, year, reverse = false, onOpenLightb
 
   return (
     <section ref={sectionRef} className="px-8 md:px-12 py-20 md:py-32 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-24 items-center max-w-[1600px] mx-auto">
-      {/* Frameless Floating Image */}
+      {/* Frameless Floating Image - Full Top Visible */}
       <div
         ref={imgWrapRef}
         data-hover
         onClick={() => onOpenLightbox(matchedPhoto)}
-        className={`relative overflow-hidden aspect-[3/4] cursor-pointer ${reverse ? "md:order-2" : "md:order-1"}`}
+        className={`relative overflow-hidden cursor-pointer ${reverse ? "md:order-2" : "md:order-1"}`}
         style={{ clipPath: "inset(0% 0% 0% 0%)" }}
       >
-        <div ref={imgRef} className="absolute inset-0 flex items-center justify-center scale-[1.22]" style={{ willChange: "transform" }}>
-          <ImageWithFallback src={photo} alt={label} className="w-full h-full object-cover" />
+        <div ref={imgRef} className="w-full flex items-center justify-center">
+          <ImageWithFallback src={photo} alt={label} className="w-full h-auto max-h-[82vh] object-cover object-top" />
         </div>
       </div>
       <div ref={textRef} className={`${reverse ? "md:order-1" : "md:order-2"}`}>
@@ -1452,21 +1447,11 @@ export default function App() {
           <div style={{ borderTop: "1px solid rgba(240,236,230,0.06)" }} />
 
           <FeaturePhoto
-            photo={img12}
-            quote="Her radiant smile|at the open door,|where journeys begin."
-            label="Journey Begins"
-            year="2024"
-            reverse
-            onOpenLightbox={setActivePhoto}
-          />
-
-          <div style={{ borderTop: "1px solid rgba(240,236,230,0.06)" }} />
-
-          <FeaturePhoto
             photo={img10}
             quote="Fingers intertwined,|a silent promise|under golden light."
             label="Intertwined"
             year="2024"
+            reverse
             onOpenLightbox={setActivePhoto}
           />
 
