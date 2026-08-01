@@ -348,16 +348,16 @@ function EditorialIntro({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHO
         </div>
       </div>
 
-      {/* Pure frameless floating image */}
+      {/* Complete full-size uncropped image */}
       <div
         ref={imgWrapRef}
         data-hover
         onClick={() => onOpenLightbox(PHOTOS[2])}
-        className="order-1 md:order-2 relative overflow-hidden aspect-[3/4] cursor-pointer"
+        className="order-1 md:order-2 relative overflow-hidden cursor-pointer flex items-center justify-center min-h-[450px] max-h-[650px] rounded-lg"
         style={{ clipPath: "inset(0% 0% 0% 0%)" }}
       >
-        <div ref={imgInnerRef} className="absolute inset-0 scale-[1.18]" style={{ willChange: "transform" }}>
-          <ImageWithFallback src={img2} alt="Traditional moment" className="w-full h-full object-cover" />
+        <div ref={imgInnerRef} className="w-full h-full flex items-center justify-center" style={{ willChange: "transform" }}>
+          <ImageWithFallback src={img2} alt="Traditional moment" className="max-w-full max-h-[620px] w-auto h-auto object-contain" />
         </div>
         <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(to bottom right, transparent 60%, rgba(8,8,8,0.5) 100%)" }} />
         <div className="absolute bottom-6 left-6">
