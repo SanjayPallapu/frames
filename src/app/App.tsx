@@ -348,16 +348,16 @@ function EditorialIntro({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHO
         </div>
       </div>
 
-      {/* Complete full-size uncropped image */}
+      {/* Complete full-size uncropped image - larger container */}
       <div
         ref={imgWrapRef}
         data-hover
         onClick={() => onOpenLightbox(PHOTOS[2])}
-        className="order-1 md:order-2 relative overflow-hidden cursor-pointer flex items-center justify-center min-h-[450px] max-h-[650px] rounded-lg"
+        className="order-1 md:order-2 relative overflow-hidden cursor-pointer flex items-start justify-center min-h-[550px] md:min-h-[750px] max-h-[850px] w-full rounded-lg"
         style={{ clipPath: "inset(0% 0% 0% 0%)" }}
       >
-        <div ref={imgInnerRef} className="w-full h-full flex items-center justify-center" style={{ willChange: "transform" }}>
-          <ImageWithFallback src={img2} alt="Traditional moment" className="max-w-full max-h-[620px] w-auto h-auto object-contain" />
+        <div ref={imgInnerRef} className="w-full h-full flex items-start justify-center overflow-hidden" style={{ willChange: "transform" }}>
+          <ImageWithFallback src={img2} alt="Traditional moment" className="w-full h-full object-cover object-top rounded-lg" />
         </div>
         <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(to bottom right, transparent 60%, rgba(8,8,8,0.5) 100%)" }} />
         <div className="absolute bottom-6 left-6">
@@ -797,49 +797,7 @@ function FilmCell({ src, label, photo, index, onOpenLightbox }: { src: string; l
   );
 }
 
-/* ─── Stats ─────────────────────────────────────────────────── */
 
-function Stats() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const items = [
-    { value: "10", label: "Photographs" },
-    { value: "2+", label: "Years Together" },
-    { value: "∞", label: "Memories Made" },
-    { value: "1", label: "Story Told" },
-  ];
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from(".stat-row", {
-        opacity: 0, y: 32, stagger: 0.1, duration: 0.9, ease: "expo.out",
-        scrollTrigger: { trigger: sectionRef.current, start: "top 78%" },
-      });
-      gsap.from(".stat-divider", {
-        scaleX: 0, stagger: 0.08, duration: 1, ease: "expo.out", transformOrigin: "left",
-        scrollTrigger: { trigger: sectionRef.current, start: "top 80%" },
-      });
-    }, sectionRef);
-    return () => ctx.revert();
-  }, []);
-
-  return (
-    <section ref={sectionRef} className="px-8 md:px-12 py-24 md:py-32 max-w-[1600px] mx-auto">
-      <div className="mb-12">
-        <p className="text-[11px] uppercase tracking-[0.28em] mb-3 font-mono" style={{ color: "#c9a0a6" }}>By the Numbers</p>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem,4vw,3.5rem)", color: "#f0ece6", fontWeight: 400 }}>The <em>Archive</em></h2>
-      </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-0">
-        {items.map(({ value, label }, i) => (
-          <div key={label} className="stat-row pr-8 md:pr-12 py-8 md:py-0" style={{ borderRight: i < 3 ? "1px solid rgba(240,236,230,0.07)" : "none", borderBottom: "none" }}>
-            <div className="stat-divider mb-4 h-px w-full" style={{ background: "rgba(240,236,230,0.08)" }} />
-            <span className="block leading-none mb-2" style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(3rem,5vw,5rem)", color: "#f0ece6", fontWeight: 400 }}>{value}</span>
-            <span className="text-[11px] tracking-[0.22em] uppercase font-mono" style={{ color: "rgba(240,236,230,0.4)" }}>{label}</span>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
 
 /* ─── Lightbox Modal ────────────────────────────────────────── */
 
@@ -1058,8 +1016,6 @@ export default function App() {
           <Manifesto />
 
           <FilmStrip onOpenLightbox={setActivePhoto} />
-
-          <Stats />
         </main>
 
         <Footer />
