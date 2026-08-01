@@ -176,7 +176,7 @@ function Nav() {
   );
 }
 
-/* ─── Hero (Frameless Image of Us) ─────────────────────────── */
+/* ─── Hero (Frameless Image) ───────────────────────────────── */
 
 function Hero({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -222,10 +222,10 @@ function Hero({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) =>
 
   return (
     <section ref={sectionRef} className="relative flex flex-col justify-end" style={{ height: "100svh", minHeight: "600px" }}>
-      {/* Background image of us */}
+      {/* Pure frameless hero background image of us */}
       <div ref={bgRef} className="absolute inset-0 overflow-hidden" style={{ willChange: "transform" }}>
         <ImageWithFallback src={img9} alt="Hero background of us" className="w-full h-full object-cover object-center" />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(8,8,8,0.3) 0%, rgba(8,8,8,0.1) 30%, rgba(8,8,8,0.65) 70%, rgba(8,8,8,0.97) 100%)" }} />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(8,8,8,0.25) 0%, rgba(8,8,8,0.05) 30%, rgba(8,8,8,0.6) 70%, rgba(8,8,8,0.97) 100%)" }} />
       </div>
 
       <div className="relative z-10 px-8 md:px-12 pb-16 md:pb-20 max-w-6xl">
@@ -291,7 +291,7 @@ function MarqueeStrip({ reverse = false, accent = false, speed = 50 }: { reverse
   );
 }
 
-/* ─── Editorial Intro (Complete Full-Size Image) ────────────── */
+/* ─── Editorial Intro (Frameless Image) ────────────────────── */
 
 function EditorialIntro({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -307,6 +307,11 @@ function EditorialIntro({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHO
         duration: 1.4,
         ease: "expo.inOut",
         scrollTrigger: { trigger: sectionRef.current, start: "top 70%" },
+      });
+      gsap.to(imgInnerRef.current, {
+        yPercent: -18,
+        ease: "none",
+        scrollTrigger: { trigger: sectionRef.current, start: "top bottom", end: "bottom top", scrub: true },
       });
       lineRefs.current.forEach((el, i) => {
         if (!el) return;
@@ -343,16 +348,16 @@ function EditorialIntro({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHO
         </div>
       </div>
 
-      {/* Complete uncropped full-size image container */}
+      {/* Pure frameless floating image */}
       <div
         ref={imgWrapRef}
         data-hover
         onClick={() => onOpenLightbox(PHOTOS[2])}
-        className="order-1 md:order-2 relative overflow-hidden cursor-pointer flex items-center justify-center bg-black/40 rounded-lg p-2 min-h-[380px] max-h-[600px]"
+        className="order-1 md:order-2 relative overflow-hidden aspect-[3/4] cursor-pointer"
         style={{ clipPath: "inset(0% 0% 0% 0%)" }}
       >
-        <div ref={imgInnerRef} className="w-full h-full flex items-center justify-center" style={{ willChange: "transform" }}>
-          <ImageWithFallback src={img2} alt="Traditional moment" className="max-w-full max-h-[560px] w-auto h-auto object-contain rounded" />
+        <div ref={imgInnerRef} className="absolute inset-0 scale-[1.18]" style={{ willChange: "transform" }}>
+          <ImageWithFallback src={img2} alt="Traditional moment" className="w-full h-full object-cover" />
         </div>
         <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(to bottom right, transparent 60%, rgba(8,8,8,0.5) 100%)" }} />
         <div className="absolute bottom-6 left-6">
@@ -430,6 +435,8 @@ function HorizontalGallery({ onOpenLightbox }: { onOpenLightbox: (photo: typeof 
   );
 }
 
+/* Pure Frameless Image Component (NO Card borders, NO card boxes) */
+
 function FramelessImageCard({ photo, index, onOpenLightbox }: { photo: typeof PHOTOS[0]; index: number; onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
   const imgRef = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
@@ -475,6 +482,7 @@ function FramelessImageCard({ photo, index, onOpenLightbox }: { photo: typeof PH
         perspective: 1000,
       }}
     >
+      {/* Pure image floating directly */}
       <ImageWithFallback
         src={photo.src}
         alt={photo.alt}
@@ -483,6 +491,7 @@ function FramelessImageCard({ photo, index, onOpenLightbox }: { photo: typeof PH
         draggable={false}
       />
 
+      {/* Floating text & metadata overlay directly on image */}
       <div className="absolute inset-0 transition-opacity duration-500 pointer-events-none" style={{ background: "linear-gradient(to top, rgba(8,8,8,0.85) 0%, transparent 55%)", opacity: hovered ? 1 : 0.45 }} />
       <div className="absolute top-4 left-4 transition-all duration-400" style={{ opacity: hovered ? 1 : 0, transform: hovered ? "translateY(0)" : "translateY(-8px)" }}>
         <span className="text-[10px] px-2 py-1 tracking-[0.15em] uppercase font-mono" style={{ color: "#c9a0a6", background: "rgba(8,8,8,0.65)", backdropFilter: "blur(10px)" }}>
@@ -545,6 +554,7 @@ function FeaturePhoto({ photo, quote, label, year, reverse = false, onOpenLightb
 
   return (
     <section ref={sectionRef} className="px-8 md:px-12 py-20 md:py-32 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-24 items-center max-w-[1600px] mx-auto">
+      {/* Frameless Floating Image */}
       <div
         ref={imgWrapRef}
         data-hover
@@ -573,7 +583,7 @@ function FeaturePhoto({ photo, quote, label, year, reverse = false, onOpenLightb
   );
 }
 
-/* ─── Bento Grid ───────────────────────────────────────────── */
+/* ─── Bento Grid (Frameless Images) ────────────────────────── */
 
 function BentoGrid({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -645,6 +655,7 @@ function BentoCell({ item, index, onOpenLightbox }: { item: { src: string; alt: 
       onMouseLeave={() => setHovered(false)}
       style={{ cursor: "pointer" }}
     >
+      {/* Pure frameless image */}
       <ImageWithFallback
         src={item.src}
         alt={item.alt}
@@ -662,7 +673,7 @@ function BentoCell({ item, index, onOpenLightbox }: { item: { src: string; alt: 
   );
 }
 
-/* ─── Manifesto ────────────────────────────────────────────── */
+/* ─── Manifesto (Frameless Background Image) ────────────────── */
 
 function Manifesto() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -718,7 +729,7 @@ function Manifesto() {
   );
 }
 
-/* ─── Film Strip ───────────────────────────────────────────── */
+/* ─── Film Strip (Frameless Images) ────────────────────────── */
 
 function FilmStrip({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -771,6 +782,7 @@ function FilmCell({ src, label, photo, index, onOpenLightbox }: { src: string; l
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
+      {/* Pure frameless image */}
       <ImageWithFallback
         src={src}
         alt={label}
@@ -782,6 +794,50 @@ function FilmCell({ src, label, photo, index, onOpenLightbox }: { src: string; l
         <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "1rem", color: "#f0ece6", fontStyle: "italic" }}>{label}</span>
       </div>
     </div>
+  );
+}
+
+/* ─── Stats ─────────────────────────────────────────────────── */
+
+function Stats() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const items = [
+    { value: "10", label: "Photographs" },
+    { value: "2+", label: "Years Together" },
+    { value: "∞", label: "Memories Made" },
+    { value: "1", label: "Story Told" },
+  ];
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(".stat-row", {
+        opacity: 0, y: 32, stagger: 0.1, duration: 0.9, ease: "expo.out",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 78%" },
+      });
+      gsap.from(".stat-divider", {
+        scaleX: 0, stagger: 0.08, duration: 1, ease: "expo.out", transformOrigin: "left",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 80%" },
+      });
+    }, sectionRef);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="px-8 md:px-12 py-24 md:py-32 max-w-[1600px] mx-auto">
+      <div className="mb-12">
+        <p className="text-[11px] uppercase tracking-[0.28em] mb-3 font-mono" style={{ color: "#c9a0a6" }}>By the Numbers</p>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem,4vw,3.5rem)", color: "#f0ece6", fontWeight: 400 }}>The <em>Archive</em></h2>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-0">
+        {items.map(({ value, label }, i) => (
+          <div key={label} className="stat-row pr-8 md:pr-12 py-8 md:py-0" style={{ borderRight: i < 3 ? "1px solid rgba(240,236,230,0.07)" : "none", borderBottom: "none" }}>
+            <div className="stat-divider mb-4 h-px w-full" style={{ background: "rgba(240,236,230,0.08)" }} />
+            <span className="block leading-none mb-2" style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(3rem,5vw,5rem)", color: "#f0ece6", fontWeight: 400 }}>{value}</span>
+            <span className="text-[11px] tracking-[0.22em] uppercase font-mono" style={{ color: "rgba(240,236,230,0.4)" }}>{label}</span>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -835,7 +891,7 @@ function LightboxModal({ photo, onClose, onPrev, onNext }: { photo: typeof PHOTO
           <img
             src={photo.src}
             alt={photo.alt}
-            className="max-w-full max-h-[82vh] w-auto h-auto object-contain transition-transform duration-500 rounded shadow-2xl"
+            className="max-w-full max-h-[82vh] w-auto h-auto object-contain transition-transform duration-500"
             style={{ transform: zoomed ? "scale(1.8)" : "scale(1)", cursor: zoomed ? "zoom-out" : "zoom-in" }}
             onClick={() => setZoomed(!zoomed)}
           />
@@ -1002,6 +1058,8 @@ export default function App() {
           <Manifesto />
 
           <FilmStrip onOpenLightbox={setActivePhoto} />
+
+          <Stats />
         </main>
 
         <Footer />
