@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
+  "packageManager": "pnpm@10.1.0",
   "scripts": {
     "build": "vite build",
     "dev": "vite"
@@ -67,13 +68,8 @@
     "vaul": "1.1.2"
   },
   "devDependencies": {
-    "@esbuild/darwin-arm64": "^0.25.12",
-    "@rollup/rollup-darwin-arm64": "^4.62.3",
-    "@tailwindcss/oxide-darwin-arm64": "^4.3.3",
     "@tailwindcss/vite": "4.1.12",
     "@vitejs/plugin-react": "4.7.0",
-    "esbuild": "0.25.12",
-    "lightningcss-darwin-arm64": "^1.33.0",
     "tailwindcss": "4.1.12",
     "vite": "6.3.5"
   },
@@ -89,9 +85,7 @@
       "optional": true
     }
   },
-  "pnpm": {
-    "overrides": {
-      "vite": "6.3.5"
-    }
+  "overrides": {
+    "vite": "6.3.5"
   }
 }
