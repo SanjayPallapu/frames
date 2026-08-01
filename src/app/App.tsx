@@ -73,20 +73,14 @@ function Cursor() {
 
     const onEnter = () => gsap.to(circle, { scale: 1.8, opacity: 0.35, duration: 0.35, ease: "expo.out" });
     const onLeave = () => gsap.to(circle, { scale: 1, opacity: 1, duration: 0.35, ease: "expo.out" });
-    const onMouseDown = () => gsap.to([dot, circle], { scale: 0.7, duration: 0.15 });
-    const onMouseUp = () => gsap.to([dot, circle], { scale: 1, duration: 0.15 });
 
     document.querySelectorAll("a,button,[data-hover]").forEach(el => {
       el.addEventListener("mouseenter", onEnter);
       el.addEventListener("mouseleave", onLeave);
     });
-    window.addEventListener("mousedown", onMouseDown);
-    window.addEventListener("mouseup", onMouseUp);
 
     return () => {
       window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mousedown", onMouseDown);
-      window.removeEventListener("mouseup", onMouseUp);
       gsap.ticker.remove(tickFn);
     };
   }, [isMobile]);
@@ -182,7 +176,7 @@ function Nav() {
   );
 }
 
-/* ─── Hero ─────────────────────────────────────────────────── */
+/* ─── Hero (Frameless Image) ───────────────────────────────── */
 
 function Hero({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -228,9 +222,9 @@ function Hero({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) =>
 
   return (
     <section ref={sectionRef} className="relative flex flex-col justify-end" style={{ height: "100svh", minHeight: "600px" }}>
-      {/* Full-size complete aspect container */}
-      <div ref={bgRef} className="absolute inset-0 overflow-hidden flex items-center justify-center bg-black/60" style={{ willChange: "transform" }}>
-        <ImageWithFallback src={img0} alt="Hero" className="w-full h-full object-cover md:object-contain object-top" style={{ marginTop: "-2%" }} />
+      {/* Pure frameless hero image */}
+      <div ref={bgRef} className="absolute inset-0 overflow-hidden" style={{ willChange: "transform" }}>
+        <ImageWithFallback src={img0} alt="Hero" className="w-full h-full object-cover object-center" />
         <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(8,8,8,0.25) 0%, rgba(8,8,8,0.05) 30%, rgba(8,8,8,0.6) 70%, rgba(8,8,8,0.97) 100%)" }} />
       </div>
 
@@ -257,7 +251,7 @@ function Hero({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) =>
             </div>
           </div>
         </div>
-        <p ref={subRef} className="text-sm max-w-xs md:max-w-sm mt-6 cursor-pointer" onClick={() => onOpenLightbox(PHOTOS[0])} style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(240,236,230,0.55)", fontWeight: 300, lineHeight: 1.85, letterSpacing: "0.01em" }}>
+        <p ref={subRef} className="text-sm max-w-xs md:max-w-sm mt-6 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => onOpenLightbox(PHOTOS[0])} style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(240,236,230,0.55)", fontWeight: 300, lineHeight: 1.85, letterSpacing: "0.01em" }}>
           Genuine moments, candid glances, and the quiet beauty of two lives woven together.
         </p>
       </div>
@@ -297,7 +291,7 @@ function MarqueeStrip({ reverse = false, accent = false, speed = 50 }: { reverse
   );
 }
 
-/* ─── Editorial Intro ──────────────────────────────────────── */
+/* ─── Editorial Intro (Frameless Image) ────────────────────── */
 
 function EditorialIntro({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -354,26 +348,27 @@ function EditorialIntro({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHO
         </div>
       </div>
 
+      {/* Pure frameless floating image */}
       <div
         ref={imgWrapRef}
         data-hover
         onClick={() => onOpenLightbox(PHOTOS[2])}
-        className="order-1 md:order-2 relative overflow-hidden aspect-[3/4] rounded-lg cursor-pointer bg-black/40 p-2"
-        style={{ clipPath: "inset(0% 0% 0% 0%)", border: "1px solid rgba(240,236,230,0.08)" }}
+        className="order-1 md:order-2 relative overflow-hidden aspect-[3/4] cursor-pointer"
+        style={{ clipPath: "inset(0% 0% 0% 0%)" }}
       >
-        <div ref={imgInnerRef} className="absolute inset-0 flex items-center justify-center scale-[1.1]" style={{ willChange: "transform" }}>
-          <ImageWithFallback src={img2} alt="Traditional moment" className="w-full h-full object-cover md:object-contain" />
+        <div ref={imgInnerRef} className="absolute inset-0 scale-[1.18]" style={{ willChange: "transform" }}>
+          <ImageWithFallback src={img2} alt="Traditional moment" className="w-full h-full object-cover" />
         </div>
         <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(to bottom right, transparent 60%, rgba(8,8,8,0.5) 100%)" }} />
         <div className="absolute bottom-6 left-6">
-          <span className="text-[11px] tracking-[0.18em] uppercase" style={{ fontFamily: "'DM Mono', monospace", color: "#c9a0a6" }}>Heritage · 2023</span>
+          <span className="text-[11px] tracking-[0.18em] uppercase font-mono" style={{ color: "rgba(240,236,230,0.7)" }}>Heritage · 2023</span>
         </div>
       </div>
     </section>
   );
 }
 
-/* ─── Responsive GSAP Horizontal Gallery (ALL DEVICES) ───────── */
+/* ─── Responsive GSAP Horizontal Gallery (Frameless Images) ─── */
 
 function HorizontalGallery({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
   const outerRef = useRef<HTMLDivElement>(null);
@@ -428,11 +423,11 @@ function HorizontalGallery({ onOpenLightbox }: { onOpenLightbox: (photo: typeof 
 
       <div
         ref={trackRef}
-        className="flex items-center gap-4 md:gap-6 pt-36 pb-12 px-8 md:px-12 whitespace-nowrap"
+        className="flex items-center gap-5 md:gap-8 pt-36 pb-12 px-8 md:px-12 whitespace-nowrap"
         style={{ width: "max-content", willChange: "transform" }}
       >
         {PHOTOS.map((p, i) => (
-          <HGalleryCard key={i} photo={p} index={i} onOpenLightbox={onOpenLightbox} />
+          <FramelessImageCard key={i} photo={p} index={i} onOpenLightbox={onOpenLightbox} />
         ))}
         <div className="flex-shrink-0 w-16 md:w-20" />
       </div>
@@ -440,67 +435,71 @@ function HorizontalGallery({ onOpenLightbox }: { onOpenLightbox: (photo: typeof 
   );
 }
 
-function HGalleryCard({ photo, index, onOpenLightbox }: { photo: typeof PHOTOS[0]; index: number; onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
-  const cardRef = useRef<HTMLDivElement>(null);
+/* Pure Frameless Image Component (NO Card borders, NO card boxes) */
+
+function FramelessImageCard({ photo, index, onOpenLightbox }: { photo: typeof PHOTOS[0]; index: number; onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
+  const imgRef = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
   const heights = [520, 440, 580, 460, 500, 420, 560, 440, 520, 480];
   const widths = [320, 260, 340, 280, 300, 260, 320, 280, 310, 290];
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const card = cardRef.current;
-    if (!card) return;
-    const rect = card.getBoundingClientRect();
+    const el = imgRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
-    gsap.to(card, {
-      rotateY: (x / rect.width) * 10,
-      rotateX: (-y / rect.height) * 10,
-      scale: 1.03,
+    gsap.to(el, {
+      rotateY: (x / rect.width) * 8,
+      rotateX: (-y / rect.height) * 8,
+      scale: 1.04,
       duration: 0.4,
       ease: "power2.out",
     });
   };
 
   const handleMouseLeave = () => {
-    const card = cardRef.current;
-    if (!card) return;
+    const el = imgRef.current;
+    if (!el) return;
     setHovered(false);
-    gsap.to(card, { rotateY: 0, rotateX: 0, scale: 1, duration: 0.5, ease: "power2.out" });
+    gsap.to(el, { rotateY: 0, rotateX: 0, scale: 1, duration: 0.5, ease: "power2.out" });
   };
 
   return (
     <div
-      ref={cardRef}
+      ref={imgRef}
       data-hover
       onClick={() => onOpenLightbox(photo)}
       onMouseEnter={() => setHovered(true)}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative flex-shrink-0 overflow-hidden rounded-lg bg-stone-900/60 p-2 cursor-pointer transition-shadow duration-500"
+      className="relative flex-shrink-0 overflow-hidden cursor-pointer"
       style={{
         width: `${widths[index]}px`,
         height: `${heights[index]}px`,
         maxWidth: "85vw",
-        border: hovered ? "1px solid rgba(201,160,166,0.6)" : "1px solid rgba(240,236,230,0.08)",
         transformStyle: "preserve-3d",
         perspective: 1000,
       }}
     >
+      {/* Pure image floating directly */}
       <ImageWithFallback
         src={photo.src}
         alt={photo.alt}
-        className="w-full h-full object-cover md:object-contain rounded transition-transform duration-700"
-        style={{ transform: hovered ? "scale(1.06)" : "scale(1.0)", willChange: "transform" }}
+        className="w-full h-full object-cover transition-transform duration-700"
+        style={{ transform: hovered ? "scale(1.08)" : "scale(1.0)", willChange: "transform" }}
         draggable={false}
       />
-      <div className="absolute inset-0 transition-opacity duration-500 pointer-events-none" style={{ background: "linear-gradient(to top, rgba(8,8,8,0.88) 0%, transparent 55%)", opacity: hovered ? 1 : 0.45 }} />
+
+      {/* Floating text & metadata overlay directly on image */}
+      <div className="absolute inset-0 transition-opacity duration-500 pointer-events-none" style={{ background: "linear-gradient(to top, rgba(8,8,8,0.85) 0%, transparent 55%)", opacity: hovered ? 1 : 0.45 }} />
       <div className="absolute top-4 left-4 transition-all duration-400" style={{ opacity: hovered ? 1 : 0, transform: hovered ? "translateY(0)" : "translateY(-8px)" }}>
-        <span className="text-[10px] px-2.5 py-1.5 tracking-[0.15em] uppercase font-mono" style={{ color: "#c9a0a6", background: "rgba(8,8,8,0.75)", backdropFilter: "blur(10px)" }}>
+        <span className="text-[10px] px-2 py-1 tracking-[0.15em] uppercase font-mono" style={{ color: "#c9a0a6", background: "rgba(8,8,8,0.65)", backdropFilter: "blur(10px)" }}>
           {photo.cat}
         </span>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 p-5 transition-all duration-500" style={{ transform: hovered ? "translateY(0)" : "translateY(10px)", opacity: hovered ? 1 : 0.7 }}>
-        <span className="block text-[11px] mb-1.5 font-mono" style={{ color: "rgba(240,236,230,0.5)", letterSpacing: "0.12em" }}>{photo.year}</span>
+      <div className="absolute bottom-0 left-0 right-0 p-5 transition-all duration-500" style={{ transform: hovered ? "translateY(0)" : "translateY(10px)", opacity: hovered ? 1 : 0.75 }}>
+        <span className="block text-[11px] mb-1 font-mono" style={{ color: "rgba(240,236,230,0.5)", letterSpacing: "0.12em" }}>{photo.year}</span>
         <span className="block text-xl font-serif italic" style={{ color: "#f0ece6", fontWeight: 400 }}>{photo.label}</span>
       </div>
       <div className="absolute top-4 right-4 transition-all duration-400" style={{ opacity: hovered ? 1 : 0 }}>
@@ -510,7 +509,7 @@ function HGalleryCard({ photo, index, onOpenLightbox }: { photo: typeof PHOTOS[0
   );
 }
 
-/* ─── Feature Photos ───────────────────────────────────────── */
+/* ─── Feature Photos (Frameless Images) ────────────────────── */
 
 function FeaturePhoto({ photo, quote, label, year, reverse = false, onOpenLightbox }: {
   photo: string;
@@ -555,15 +554,16 @@ function FeaturePhoto({ photo, quote, label, year, reverse = false, onOpenLightb
 
   return (
     <section ref={sectionRef} className="px-8 md:px-12 py-20 md:py-32 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-24 items-center max-w-[1600px] mx-auto">
+      {/* Frameless Floating Image */}
       <div
         ref={imgWrapRef}
         data-hover
         onClick={() => onOpenLightbox(matchedPhoto)}
-        className={`relative overflow-hidden aspect-[3/4] rounded-lg cursor-pointer bg-black/40 p-2 ${reverse ? "md:order-2" : "md:order-1"}`}
-        style={{ clipPath: "inset(0% 0% 0% 0%)", border: "1px solid rgba(240,236,230,0.08)" }}
+        className={`relative overflow-hidden aspect-[3/4] cursor-pointer ${reverse ? "md:order-2" : "md:order-1"}`}
+        style={{ clipPath: "inset(0% 0% 0% 0%)" }}
       >
         <div ref={imgRef} className="absolute inset-0 flex items-center justify-center scale-[1.22]" style={{ willChange: "transform" }}>
-          <ImageWithFallback src={photo} alt={label} className="w-full h-full object-cover md:object-contain" />
+          <ImageWithFallback src={photo} alt={label} className="w-full h-full object-cover" />
         </div>
       </div>
       <div ref={textRef} className={`${reverse ? "md:order-1" : "md:order-2"}`}>
@@ -583,7 +583,7 @@ function FeaturePhoto({ photo, quote, label, year, reverse = false, onOpenLightb
   );
 }
 
-/* ─── Bento Grid ───────────────────────────────────────────── */
+/* ─── Bento Grid (Frameless Images) ────────────────────────── */
 
 function BentoGrid({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -648,31 +648,32 @@ function BentoCell({ item, index, onOpenLightbox }: { item: { src: string; alt: 
   const [hovered, setHovered] = useState(false);
   return (
     <div
-      className={`bento-cell relative overflow-hidden rounded-lg bg-stone-900/60 p-2 ${item.span}`}
+      className={`bento-cell relative overflow-hidden ${item.span}`}
       data-hover
       onClick={() => onOpenLightbox(item.photo)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      style={{ cursor: "pointer", border: "1px solid rgba(240,236,230,0.08)" }}
+      style={{ cursor: "pointer" }}
     >
+      {/* Pure frameless image */}
       <ImageWithFallback
         src={item.src}
         alt={item.alt}
-        className="w-full h-full object-cover md:object-contain rounded transition-transform duration-700"
-        style={{ transform: hovered ? "scale(1.06)" : "scale(1)", willChange: "transform" }}
+        className="w-full h-full object-cover transition-transform duration-700"
+        style={{ transform: hovered ? "scale(1.08)" : "scale(1)", willChange: "transform" }}
       />
       <div className="absolute inset-0 transition-opacity duration-500 pointer-events-none" style={{ background: "linear-gradient(135deg, transparent 40%, rgba(8,8,8,0.75) 100%)", opacity: hovered ? 1 : 0.35 }} />
       <div className="absolute bottom-5 left-5 transition-all duration-400" style={{ opacity: hovered ? 1 : 0, transform: hovered ? "translateY(0)" : "translateY(8px)" }}>
         <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", color: "#f0ece6", fontStyle: "italic" }}>{item.label}</span>
       </div>
-      <div className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center transition-all duration-300 rounded-full" style={{ background: "rgba(8,8,8,0.65)", backdropFilter: "blur(8px)", opacity: hovered ? 1 : 0 }}>
+      <div className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center transition-all duration-300 rounded-full" style={{ background: "rgba(8,8,8,0.55)", backdropFilter: "blur(8px)", opacity: hovered ? 1 : 0 }}>
         <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 10L10 1M10 1H3M10 1V8" stroke="#c9a0a6" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </div>
     </div>
   );
 }
 
-/* ─── Manifesto ────────────────────────────────────────────── */
+/* ─── Manifesto (Frameless Background Image) ────────────────── */
 
 function Manifesto() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -702,7 +703,7 @@ function Manifesto() {
   return (
     <section ref={sectionRef} className="relative flex items-center justify-center text-center overflow-hidden" style={{ minHeight: "100svh" }}>
       <div ref={bgImgRef} className="absolute inset-0 flex items-center justify-center scale-[1.25]" style={{ willChange: "transform" }}>
-        <ImageWithFallback src={img3} alt="Manifesto backdrop" className="w-full h-full object-cover md:object-contain opacity-40" />
+        <ImageWithFallback src={img3} alt="Manifesto backdrop" className="w-full h-full object-cover opacity-35" />
         <div className="absolute inset-0" style={{ background: "rgba(8,8,8,0.75)" }} />
       </div>
       <div className="relative z-10 px-8 py-20 max-w-3xl mx-auto">
@@ -728,7 +729,7 @@ function Manifesto() {
   );
 }
 
-/* ─── Film Strip ───────────────────────────────────────────── */
+/* ─── Film Strip (Frameless Images) ────────────────────────── */
 
 function FilmStrip({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -774,17 +775,18 @@ function FilmCell({ src, label, photo, index, onOpenLightbox }: { src: string; l
   const heights = ["420px", "360px", "480px", "400px", "440px"];
   return (
     <div
-      className="film-cell relative overflow-hidden rounded-lg bg-stone-900/60 p-2 col-span-1 cursor-pointer"
-      style={{ height: heights[index], border: "1px solid rgba(240,236,230,0.08)" }}
+      className="film-cell relative overflow-hidden col-span-1 cursor-pointer"
+      style={{ height: heights[index] }}
       data-hover
       onClick={() => onOpenLightbox(photo)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
+      {/* Pure frameless image */}
       <ImageWithFallback
         src={src}
         alt={label}
-        className="w-full h-full object-cover md:object-contain rounded transition-transform duration-700"
+        className="w-full h-full object-cover transition-transform duration-700"
         style={{ transform: hovered ? "scale(1.07)" : "scale(1)", willChange: "transform" }}
       />
       <div className="absolute inset-0 transition-opacity duration-500 pointer-events-none" style={{ background: "linear-gradient(to top, rgba(8,8,8,0.85) 0%, transparent 50%)", opacity: hovered ? 1 : 0.4 }} />
@@ -889,7 +891,7 @@ function LightboxModal({ photo, onClose, onPrev, onNext }: { photo: typeof PHOTO
           <img
             src={photo.src}
             alt={photo.alt}
-            className="max-w-full max-h-[80vh] w-auto h-auto object-contain transition-transform duration-500 rounded shadow-2xl"
+            className="max-w-full max-h-[82vh] w-auto h-auto object-contain transition-transform duration-500"
             style={{ transform: zoomed ? "scale(1.8)" : "scale(1)", cursor: zoomed ? "zoom-out" : "zoom-in" }}
             onClick={() => setZoomed(!zoomed)}
           />
