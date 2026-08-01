@@ -177,12 +177,12 @@ function Nav() {
   return (
     <nav
       ref={navRef}
-      className="fixed top-0 left-0 right-0 z-[500] flex items-center justify-between px-8 md:px-12 transition-all duration-700"
+      className="fixed top-0 left-0 right-0 z-[500] flex items-center justify-between px-4 md:px-12 transition-all duration-700"
       style={{
-        height: scrolled ? "64px" : "80px",
-        background: scrolled ? "rgba(8,8,8,0.88)" : "transparent",
+        height: scrolled ? "60px" : "80px",
+        background: scrolled ? "rgba(8,8,8,0.95)" : "linear-gradient(to bottom, rgba(8,8,8,0.7) 0%, transparent 100%)",
         backdropFilter: scrolled ? "blur(20px)" : "none",
-        borderBottom: scrolled ? "1px solid rgba(240,236,230,0.06)" : "1px solid transparent",
+        borderBottom: scrolled ? "1px solid rgba(240,236,230,0.08)" : "1px solid transparent",
       }}
     >
       <span data-hover style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.15rem", color: "#f0ece6", fontStyle: "italic", letterSpacing: "0.12em" }}>
@@ -249,23 +249,23 @@ function Hero({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0]) =>
         <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(8,8,8,0.25) 0%, rgba(8,8,8,0.05) 30%, rgba(8,8,8,0.6) 70%, rgba(8,8,8,0.97) 100%)" }} />
       </div>
 
-      <div className="relative z-10 px-8 md:px-12 pb-16 md:pb-20 max-w-6xl">
-        <p ref={tagRef} className="text-[11px] uppercase tracking-[0.32em] mb-6 md:mb-8" style={{ fontFamily: "'DM Mono', monospace", color: "#c9a0a6" }}>
+      <div className="relative z-10 px-5 md:px-12 pb-14 md:pb-20 max-w-6xl">
+        <p ref={tagRef} className="text-[10px] md:text-[11px] uppercase tracking-[0.32em] mb-4 md:mb-8" style={{ fontFamily: "'DM Mono', monospace", color: "#c9a0a6" }}>
           A Personal Collection · 2023–2024
         </p>
         <div className="mb-4">
           <div style={{ overflow: "hidden" }}>
-            <div ref={h1aRef} className="leading-[0.92]" style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(4rem,11vw,9.5rem)", color: "#f0ece6", fontWeight: 400, letterSpacing: "-0.025em" }}>
+            <div ref={h1aRef} className="leading-[0.92]" style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2.8rem,9vw,9.5rem)", color: "#f0ece6", fontWeight: 400, letterSpacing: "-0.025em" }}>
               Our
             </div>
           </div>
           <div style={{ overflow: "hidden" }}>
-            <div ref={h1bRef} className="leading-[0.92] flex items-baseline gap-4 flex-wrap">
-              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(4rem,11vw,9.5rem)", color: "#f0ece6", fontWeight: 400, fontStyle: "italic", letterSpacing: "-0.025em" }}>
+            <div ref={h1bRef} className="leading-[0.92] flex items-baseline gap-3 md:gap-4 flex-wrap">
+              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2.8rem,9vw,9.5rem)", color: "#f0ece6", fontWeight: 400, fontStyle: "italic", letterSpacing: "-0.025em" }}>
                 beautiful
               </span>
               <span style={{ overflow: "hidden", display: "inline-block", verticalAlign: "bottom" }}>
-                <span ref={wordRef} style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem,5.5vw,4.8rem)", color: "#c9a0a6", fontWeight: 400, display: "inline-block", letterSpacing: "-0.02em" }}>
+                <span ref={wordRef} style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.6rem,5vw,4.8rem)", color: "#c9a0a6", fontWeight: 400, display: "inline-block", letterSpacing: "-0.02em" }}>
                   {words[wordIdx]}
                 </span>
               </span>
@@ -361,11 +361,11 @@ function EditorialIntro({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHO
           ))}
         </div>
         <p className="text-sm leading-relaxed max-w-sm" style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(240,236,230,0.5)", fontWeight: 300 }}>
-          This collection captures 10 genuine photographs — unposed, unrehearsed, and deeply personal. From traditional celebrations to quiet everyday moments.
+          This collection captures 20 genuine photographs — unposed, unrehearsed, and deeply personal. From traditional celebrations to quiet everyday moments.
         </p>
         <div className="mt-10 flex items-center gap-4">
           <div className="h-px w-12" style={{ background: "#c9a0a6" }} />
-          <span className="text-[11px] tracking-[0.2em] uppercase" style={{ fontFamily: "'DM Mono', monospace", color: "rgba(240,236,230,0.4)" }}>10 Photographs · 2023–2024</span>
+          <span className="text-[11px] tracking-[0.2em] uppercase" style={{ fontFamily: "'DM Mono', monospace", color: "rgba(240,236,230,0.4)" }}>20 Photographs · 2023–2024</span>
         </div>
       </div>
 
@@ -374,7 +374,7 @@ function EditorialIntro({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHO
         ref={imgWrapRef}
         data-hover
         onClick={() => onOpenLightbox(PHOTOS[2])}
-        className="order-1 md:order-2 relative overflow-hidden cursor-pointer flex items-start justify-center min-h-[550px] md:min-h-[750px] max-h-[850px] w-full rounded-lg"
+        className="order-1 md:order-2 relative overflow-hidden cursor-pointer flex items-start justify-center min-h-[420px] md:min-h-[750px] max-h-[850px] w-full rounded-lg"
         style={{ clipPath: "inset(0% 0% 0% 0%)" }}
       >
         <div ref={imgInnerRef} className="w-full h-full flex items-start justify-center overflow-hidden" style={{ willChange: "transform" }}>
@@ -553,7 +553,7 @@ function KineticTextRoom({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PH
         <div
           data-hover
           onClick={() => onOpenLightbox(PHOTOS[9])}
-          className="relative z-30 w-80 h-52 sm:w-[420px] sm:h-[260px] md:w-[540px] md:h-[320px] rounded-2xl overflow-hidden border border-indigo-400/40 shadow-[0_0_100px_rgba(129,140,248,0.45)] cursor-pointer group bg-black"
+          className="relative z-30 w-[88vw] h-[230px] sm:w-[420px] sm:h-[260px] md:w-[540px] md:h-[320px] rounded-2xl overflow-hidden border border-indigo-400/40 shadow-[0_0_100px_rgba(129,140,248,0.45)] cursor-pointer group bg-black"
           style={{ transform: "translateZ(90px)" }}
         >
           <ImageWithFallback
@@ -990,11 +990,15 @@ function FilmStrip({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PHOTOS[0
 
 function FilmCell({ src, label, photo, index, onOpenLightbox }: { src: string; label: string; photo: typeof PHOTOS[0]; index: number; onOpenLightbox: (photo: typeof PHOTOS[0]) => void }) {
   const [hovered, setHovered] = useState(false);
-  const heights = ["420px", "360px", "480px", "400px", "440px"];
+  const isMobile = useIsMobile();
+  const heightsDesktop = ["420px", "360px", "480px", "400px", "440px"];
+  const heightsMobile = ["280px", "240px", "310px", "260px", "290px"];
+  const height = isMobile ? heightsMobile[index] : heightsDesktop[index];
+
   return (
     <div
       className="film-cell relative overflow-hidden col-span-1 cursor-pointer"
-      style={{ height: heights[index] }}
+      style={{ height }}
       data-hover
       onClick={() => onOpenLightbox(photo)}
       onMouseEnter={() => setHovered(true)}
@@ -1035,6 +1039,16 @@ function PolaroidFanDeck({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PH
     "shy glance",
     "warm indoors",
     "forever memory",
+    "intertwined hands",
+    "timeless monochrome",
+    "journey smile",
+    "sunlit silhouettes",
+    "platform whispers",
+    "playful moments",
+    "sacred devotion",
+    "cozy selfie",
+    "temple visit",
+    "cinema date night"
   ];
 
   const handlePrev = useCallback(() => {
@@ -1147,7 +1161,7 @@ function PolaroidFanDeck({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PH
                 }}
               >
                 {/* Polaroid Frame */}
-                <div className="w-[280px] sm:w-[320px] md:w-[380px] bg-[#f7f3eb] p-3 sm:p-4 pb-6 sm:pb-8 rounded-[3px] shadow-[0_22px_55px_rgba(0,0,0,0.7)] border border-[#e5ded0]/60 transition-transform duration-300 hover:scale-[1.02]">
+                <div className="w-[250px] sm:w-[320px] md:w-[380px] bg-[#f7f3eb] p-3 sm:p-4 pb-6 sm:pb-8 rounded-[3px] shadow-[0_22px_55px_rgba(0,0,0,0.7)] border border-[#e5ded0]/60 transition-transform duration-300 hover:scale-[1.02]">
                   {/* Photo Container */}
                   <div className="relative aspect-[4/3] w-full overflow-hidden bg-stone-900 rounded-[2px]">
                     <ImageWithFallback
@@ -1214,6 +1228,7 @@ function PolaroidFanDeck({ onOpenLightbox }: { onOpenLightbox: (photo: typeof PH
 function LightboxModal({ photo, onClose, onPrev, onNext }: { photo: typeof PHOTOS[0] | null; onClose: () => void; onPrev: () => void; onNext: () => void }) {
   const modalRef = useRef<HTMLDivElement>(null);
   const [zoomed, setZoomed] = useState(false);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   useEffect(() => {
     if (!photo) return;
@@ -1233,10 +1248,27 @@ function LightboxModal({ photo, onClose, onPrev, onNext }: { photo: typeof PHOTO
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [photo, onClose, onPrev, onNext]);
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null) return;
+    const diff = e.changedTouches[0].clientX - touchStartX;
+    if (diff > 45) onPrev();
+    else if (diff < -45) onNext();
+    setTouchStartX(null);
+  };
+
   if (!photo) return null;
 
   return (
-    <div ref={modalRef} className="fixed inset-0 z-[99999] flex flex-col justify-between p-4 md:p-8 bg-black/95 backdrop-blur-2xl text-white">
+    <div
+      ref={modalRef}
+      className="fixed inset-0 z-[99999] flex flex-col justify-between p-4 md:p-8 bg-black/95 backdrop-blur-2xl text-white select-none"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       <div className="flex items-center justify-between z-10">
         <span className="text-xs font-mono uppercase tracking-widest text-[#c9a0a6] px-3 py-1 rounded bg-[#c9a0a6]/10 border border-[#c9a0a6]/30">
           {photo.cat} · {photo.year}
